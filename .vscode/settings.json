@@ -1,0 +1,14 @@
+{
+    "rust-analyzer.cargo.extraEnv": {
+        "PKG_CONFIG_PATH": "${workspaceFolder}/prefix.ignoreme/lib/pkgconfig/",
+        "LD_LIBRARY_PATH": "${workspaceFolder}/prefix.ignoreme/lib/"
+    },
+    "terminal.integrated.env.linux": {
+        "PKG_CONFIG_PATH": "${workspaceFolder}/prefix.ignoreme/lib/pkgconfig/",
+        "LD_LIBRARY_PATH": "${workspaceFolder}/prefix.ignoreme/lib/",
+    },
+    "rust-analyzer.runnables.extraEnv": {
+        "PKG_CONFIG_PATH": "${workspaceFolder}/prefix.ignoreme/lib/pkgconfig/",
+        "LD_LIBRARY_PATH": "${workspaceFolder}/prefix.ignoreme/lib/",
+    },
+}
