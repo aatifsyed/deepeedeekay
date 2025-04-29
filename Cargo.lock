@@ -117,14 +117,14 @@ version = "0.1.0"
 dependencies = [
  "bstr",
  "bytes",
- "dpdk-sys",
+ "deepeedeekay-sys",
  "itertools 0.14.0",
  "num",
  "static_assertions",
 ]
 
 [[package]]
-name = "dpdk-sys"
+name = "deepeedeekay-sys"
 version = "0.1.0"
 dependencies = [
  "anyhow",

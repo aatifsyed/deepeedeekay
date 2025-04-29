@@ -9,7 +9,7 @@ extern crate std;
 use alloc::vec::Vec;
 
 pub mod pkt;
-pub use dpdk_sys as sys;
+pub use deepeedeekay_sys as sys;
 pub mod ffi;
 pub mod log;
 pub mod port;

@@ -75,8 +75,8 @@ pub mod neg {
         ($($name:ident),* $(,)?) => {
             $(
                 pub const $name: i32 = {
-                    assert!(dpdk_sys::$name < i32::MAX as u32);
-                    match (dpdk_sys::$name as i32).checked_neg() {
+                    assert!(crate::sys::$name < i32::MAX as u32);
+                    match (crate::sys::$name as i32).checked_neg() {
                         Some(it) => it,
                         None => panic!()
                     }

@@ -5,7 +5,7 @@ use std::{
 };
 
 use anyhow::{ensure, Context as _};
-use dpdk_sys::*;
+use deepeedeekay_sys::*;
 
 fn main() -> anyhow::Result<()> {
     let args = env::args_os()
