@@ -2172,12 +2172,25 @@ in param src
 return
   The address of the first non whitespace character.*/
 const char * deepeedeekay_rte_str_skip_leading_spaces(const char * src);
+/**
+ 
+warning
+  this API may change, or be removed, without prior notice
+ Test if trace feature is enabled at compile time.
+ 
+return
+   true if trace feature is enabled, false otherwise.*/
+bool  deepeedeekay_rte_trace_feature_is_enabled();
 /***/
-void  deepeedeekay_rte_ethdev_trace_rx_burst(uint16_t port_id, uint16_t queue_id, void ** pkt_tbl, uint16_t nb_rx);
+void  deepeedeekay_rte_ethdev_trace_rx_burst_empty(uint16_t port_id, uint16_t queue_id, void ** pkt_tbl);
+/***/
+void  deepeedeekay_rte_ethdev_trace_rx_burst_nonempty(uint16_t port_id, uint16_t queue_id, void ** pkt_tbl, uint16_t nb_rx);
 /***/
 void  deepeedeekay_rte_ethdev_trace_tx_burst(uint16_t port_id, uint16_t queue_id, void ** pkts_tbl, uint16_t nb_pkts);
 /***/
-void  deepeedeekay_rte_eth_trace_call_rx_callbacks(uint16_t port_id, uint16_t queue_id, void ** rx_pkts, uint16_t nb_rx, uint16_t nb_pkts);
+void  deepeedeekay_rte_eth_trace_call_rx_callbacks_empty(uint16_t port_id, uint16_t queue_id, void ** rx_pkts, uint16_t nb_pkts);
+/***/
+void  deepeedeekay_rte_eth_trace_call_rx_callbacks_nonempty(uint16_t port_id, uint16_t queue_id, void ** rx_pkts, uint16_t nb_rx, uint16_t nb_pkts);
 /***/
 void  deepeedeekay_rte_eth_trace_call_tx_callbacks(uint16_t port_id, uint16_t queue_id, void ** tx_pkts, uint16_t nb_pkts);
 /***/
@@ -3083,14 +3096,6 @@ return
    - 0: On success   -EPERM: mbuf is shared overwriting would be unsafe   -ENOSPC: not enough headroom in mbuf*/
 int  deepeedeekay_rte_vlan_insert(struct rte_mbuf ** m);
 /**
- Get the length of an IPv4 header.
- 
-in param ipv4_hdr
-   Pointer to the IPv4 header. 
-return
-   The length of the IPv4 header (with options if present) in bytes.*/
-uint8_t  deepeedeekay_rte_ipv4_hdr_len(const struct rte_ipv4_hdr * ipv4_hdr);
-/**
  Process the non-complemented checksum of a buffer.
  
 in param buf
@@ -3115,6 +3120,14 @@ return
    0 on success, -1 on error (bad length or offset).*/
 int  deepeedeekay_rte_raw_cksum_mbuf(const struct rte_mbuf * m, uint32_t off, uint32_t len, uint16_t * cksum);
 /**
+ Get the length of an IPv4 header.
+ 
+in param ipv4_hdr
+   Pointer to the IPv4 header. 
+return
+   The length of the IPv4 header (with options if present) in bytes.*/
+uint8_t  deepeedeekay_rte_ipv4_hdr_len(const struct rte_ipv4_hdr * ipv4_hdr);
+/**
  Process the IPv4 checksum of an IPv4 header.
  The checksum field must be set to 0 by the caller.
  
@@ -3123,6 +3136,18 @@ in param ipv4_hdr
 return
    The complemented checksum to set in the IP packet.*/
 uint16_t  deepeedeekay_rte_ipv4_cksum(const struct rte_ipv4_hdr * ipv4_hdr);
+/**
+ 
+warning
+  this API may change without prior notice.
+ Process the IPv4 checksum of an IPv4 header without any extensions.
+ The checksum field does NOT have to be set by the caller, the field is skipped by the calculation.
+ 
+in param ipv4_hdr
+   The pointer to the contiguous IPv4 header. 
+return
+   The complemented checksum to set in the IP packet.*/
+uint16_t  deepeedeekay_rte_ipv4_cksum_simple(const struct rte_ipv4_hdr * ipv4_hdr);
 /**
  Process the pseudo-header checksum of an IPv4 header.
  The checksum field must be set to 0 by the caller.
@@ -3183,6 +3208,135 @@ in param l4_off
 return
    Return 0 if the checksum is correct, else -1.*/
 int  deepeedeekay_rte_ipv4_udptcp_cksum_mbuf_verify(const struct rte_mbuf * m, const struct rte_ipv4_hdr * ipv4_hdr, uint16_t l4_off);
+/**
+ Check if two IPv6 Addresses are equal.
+ 
+in param a
+   The first address. 
+in param b
+   The second address. 
+return
+   true if both addresses are identical.*/
+bool  deepeedeekay_rte_ipv6_addr_eq(const struct rte_ipv6_addr * a, const struct rte_ipv6_addr * b);
+/**
+ Mask an IPv6 address using the specified depth.
+ Leave untouched one bit per unit in the depth variable and set the rest to 0.
+ 
+in param ip
+   The address to mask. 
+out param depth
+   All bits starting from this bit number will be set to zero.*/
+void  deepeedeekay_rte_ipv6_addr_mask(struct rte_ipv6_addr * ip, uint8_t depth);
+/**
+ Check if two IPv6 addresses belong to the same network prefix.
+ 
+in param a
+  The first address or network. 
+in param b
+  The second address or network. 
+in param depth
+  The network prefix length. 
+return
+    if the first  bits of both addresses are identical.*/
+bool  deepeedeekay_rte_ipv6_addr_eq_prefix(const struct rte_ipv6_addr * a, const struct rte_ipv6_addr * b, uint8_t depth);
+/**
+ Get the depth of a given IPv6 address mask.
+ 
+in param mask
+   The address mask. 
+return
+   The number of consecutive bits set to 1 starting from the beginning of the mask.*/
+uint8_t  deepeedeekay_rte_ipv6_mask_depth(const struct rte_ipv6_addr * mask);
+/**
+ Check if an IPv6 address is unspecified as defined in RFC 4291, section 2.5.2.
+ 
+in param ip
+   The address to check. 
+return
+    if the address is the unspecified address (all zeroes).*/
+bool  deepeedeekay_rte_ipv6_addr_is_unspec(const struct rte_ipv6_addr * ip);
+/**
+ Check if an IPv6 address is the loopback address as defined in RFC 4291, section 2.5.3.
+ 
+in param ip
+   The address to check. 
+return
+    if the address is the loopback address (all zeroes except the last bit).*/
+bool  deepeedeekay_rte_ipv6_addr_is_loopback(const struct rte_ipv6_addr * ip);
+/**
+ Check if an IPv6 address is link-local as defined in RFC 4291, section 2.5.6.
+ 
+in param ip
+   The address to check. 
+return
+    if the address is a link-local address.*/
+bool  deepeedeekay_rte_ipv6_addr_is_linklocal(const struct rte_ipv6_addr * ip);
+/**
+ Check if an IPv6 address is site-local as defined in RFC 4291, section 2.5.7.
+ 
+in param ip
+   The address to check. 
+return
+    if the address is a site-local address.*/
+bool  deepeedeekay_rte_ipv6_addr_is_sitelocal(const struct rte_ipv6_addr * ip);
+/**
+ Check if an IPv6 address is an IPv4-compatible address as defined in RFC 4291, section 2.5.5.1.
+ 
+in param ip
+   The address to check. 
+return
+    if the address is an IPv4-compatible address.*/
+bool  deepeedeekay_rte_ipv6_addr_is_v4compat(const struct rte_ipv6_addr * ip);
+/**
+ Check if an IPv6 address is an IPv4-mapped address as defined in RFC 4291, section 2.5.5.2.
+ 
+in param ip
+   The address to check. 
+return
+    if the address is an IPv4-mapped address.*/
+bool  deepeedeekay_rte_ipv6_addr_is_v4mapped(const struct rte_ipv6_addr * ip);
+/**
+ Check if an IPv6 address is multicast as defined in RFC 4291, section 2.7.
+ 
+in param ip
+   The address to check. 
+return
+    if the address is multicast.*/
+bool  deepeedeekay_rte_ipv6_addr_is_mcast(const struct rte_ipv6_addr * ip);
+/**
+ Extract the IPv6 multicast scope value as defined in RFC 4291, section 2.7.
+ 
+in param ip
+   The address from which to get the multicast scope. 
+return
+   The multicast scope of the address, or #RTE_IPV6_MC_SCOPE_NONE if the   address is not multicast.*/
+enum rte_ipv6_mc_scope  deepeedeekay_rte_ipv6_mc_scope(const struct rte_ipv6_addr * ip);
+/***/
+void  deepeedeekay_rte_ipv6_llocal_from_ethernet(struct rte_ipv6_addr * ip, const struct rte_ether_addr * mac);
+/**
+ Convert a unicast or anycast IPv6 address to a solicited-node multicast address as defined in RFC 4291, section 2.7.1.
+ 
+out param sol
+   The IPv6 solicited-node multicast address to generate. 
+in param ip
+   A unicast or anycast address.*/
+void  deepeedeekay_rte_ipv6_solnode_from_addr(struct rte_ipv6_addr * sol, const struct rte_ipv6_addr * ip);
+/**
+ Generate a multicast Ethernet address from a multicast IPv6 address as defined in RFC 2464, section 7.
+ 
+out param mac
+   The multicast Ethernet address to generate. 
+in param ip
+   A multicast IPv6 address.*/
+void  deepeedeekay_rte_ether_mcast_from_ipv6(struct rte_ether_addr * mac, const struct rte_ipv6_addr * ip);
+/**
+ Check that the IPv6 header version field is valid according to RFC 8200 section 3.
+ 
+in param ip
+   The IPv6 header. 
+return
+    if the version field is valid.  otherwise.*/
+int  deepeedeekay_rte_ipv6_check_version(const struct rte_ipv6_hdr * ip);
 /**
  Process the pseudo-header checksum of an IPv6 header.
  Depending on the ol_flags, the pseudo-header checksum expected by the drivers is not the same. For instance, when TSO is enabled, the IPv6 payload length must not be included in the packet.

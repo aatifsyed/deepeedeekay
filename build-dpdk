@@ -2,7 +2,7 @@
 set -euxo pipefail
 
 repo="$(dirname "$(readlink -f "$0")")"
-dpdk_version=${dpdk_version:-24.07}
+dpdk_version=${dpdk_version:-24.11.2}
 workdir=${workdir:-$repo/workdir.ignoreme}
 prefix=${prefix:-$repo/prefix.ignoreme}
 dpdk_src=$workdir/dpdk/

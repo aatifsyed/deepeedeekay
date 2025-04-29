@@ -20,11 +20,8 @@ fn main() -> anyhow::Result<()> {
         defines,
         ..
     } = pkg_config::Config::new()
-        .exactly_version("24.07.0")
+        .range_version("24.11.0".."24.12.0")
         .probe("libdpdk")?;
-
-    // BUG: this isn't picked up by pkg-config by default
-    println!("cargo::rustc-link-lib=rte_net_ring");
 
     let include_flags = include_paths
         .iter()

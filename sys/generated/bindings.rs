@@ -361,6 +361,7 @@ pub const RTE_NET_OCTEON_EP: u32 = 1;
 pub const RTE_NET_PCAP: u32 = 1;
 pub const RTE_NET_PFE: u32 = 1;
 pub const RTE_NET_QEDE: u32 = 1;
+pub const RTE_NET_R8169: u32 = 1;
 pub const RTE_NET_RING: u32 = 1;
 pub const RTE_NET_SFC: u32 = 1;
 pub const RTE_NET_SOFTNIC: u32 = 1;
@@ -371,19 +372,28 @@ pub const RTE_NET_VDEV_NETVSC: u32 = 1;
 pub const RTE_NET_VHOST: u32 = 1;
 pub const RTE_NET_VIRTIO: u32 = 1;
 pub const RTE_NET_VMXNET3: u32 = 1;
+pub const RTE_NET_ZXDH: u32 = 1;
 pub const RTE_PKTMBUF_HEADROOM: u32 = 128;
 pub const RTE_PORT_PCAP: u32 = 1;
+pub const RTE_POWER_ACPI: u32 = 1;
+pub const RTE_POWER_AMD_PSTATE: u32 = 1;
+pub const RTE_POWER_CPPC: u32 = 1;
+pub const RTE_POWER_INTEL_PSTATE: u32 = 1;
+pub const RTE_POWER_INTEL_UNCORE: u32 = 1;
+pub const RTE_POWER_KVM_VM: u32 = 1;
 pub const RTE_RAW_CNXK_BPHY: u32 = 1;
 pub const RTE_RAW_CNXK_GPIO: u32 = 1;
+pub const RTE_RAW_CNXK_RVU_LF: u32 = 1;
 pub const RTE_RAW_DPAA2_CMDIF: u32 = 1;
+pub const RTE_RAW_GDTC: u32 = 1;
 pub const RTE_RAW_NTB: u32 = 1;
 pub const RTE_RAW_SKELETON: u32 = 1;
 pub const RTE_REGEX_CN9K: u32 = 1;
 pub const RTE_VDPA_IFC: u32 = 1;
 pub const RTE_VDPA_NFP: u32 = 1;
 pub const RTE_VDPA_SFC: u32 = 1;
-pub const RTE_VER_MINOR: u32 = 0;
-pub const RTE_VER_MONTH: u32 = 7;
+pub const RTE_VER_MINOR: u32 = 2;
+pub const RTE_VER_MONTH: u32 = 11;
 pub const RTE_VER_RELEASE: u32 = 99;
 pub const RTE_VER_SUFFIX: &[u8; 1] = b"\0";
 pub const RTE_VER_YEAR: u32 = 24;
@@ -393,6 +403,7 @@ pub const RTE_EXEC_ENV_LINUXAPP: u32 = 1;
 pub const RTE_VER_PREFIX: &[u8; 5] = b"DPDK\0";
 pub const RTE_CACHE_GUARD_LINES: u32 = 1;
 pub const RTE_MAX_HEAPS: u32 = 32;
+pub const RTE_MAX_LCORE_VAR: u32 = 131072;
 pub const RTE_MAX_MEMSEG_LISTS: u32 = 128;
 pub const RTE_MAX_MEMSEG_PER_LIST: u32 = 8192;
 pub const RTE_MAX_MEM_MB_PER_LIST: u32 = 32768;
@@ -400,6 +411,7 @@ pub const RTE_MAX_MEMSEG_PER_TYPE: u32 = 32768;
 pub const RTE_MAX_MEM_MB_PER_TYPE: u32 = 65536;
 pub const RTE_MAX_TAILQ: u32 = 32;
 pub const RTE_MAX_VFIO_CONTAINERS: u32 = 64;
+pub const RTE_TRACE: u32 = 1;
 pub const RTE_CONTIGMEM_MAX_NUM_BUFS: u32 = 64;
 pub const RTE_CONTIGMEM_DEFAULT_NUM_BUFS: u32 = 1;
 pub const RTE_CONTIGMEM_DEFAULT_BUF_SIZE: u32 = 536870912;
@@ -475,7 +487,7 @@ pub const RTE_LOG_MAX: u32 = 8;
 pub const RTE_DEV_NAME_MAX_LEN: u32 = 64;
 pub const RTE_UUID_STRLEN: u32 = 37;
 pub const RTE_MAGIC: u32 = 19820526;
-pub const RTE_MP_MAX_FD_NUM: u32 = 8;
+pub const RTE_MP_MAX_FD_NUM: u32 = 253;
 pub const RTE_MP_MAX_NAME_LEN: u32 = 64;
 pub const RTE_MP_MAX_PARAM_LEN: u32 = 256;
 pub const EPERM: u32 = 1;
@@ -671,6 +683,7 @@ pub const RTE_DEVARGS_KEY_CLASS: &[u8; 6] = b"class\0";
 pub const RTE_DEVARGS_KEY_DRIVER: &[u8; 7] = b"driver\0";
 pub const RTE_POWER_MONITOR_OPAQUE_SZ: u32 = 4;
 pub const RTE_TRACE_BLOB_LEN_MAX: u32 = 64;
+pub const RTE_ETH_REG_NAME_SIZE: u32 = 64;
 pub const RTE_ETH_MODULE_SFF_8079: u32 = 1;
 pub const RTE_ETH_MODULE_SFF_8079_LEN: u32 = 256;
 pub const RTE_ETH_MODULE_SFF_8472: u32 = 2;
@@ -795,6 +808,7 @@ pub const RTE_PTYPE_L4_SCTP: u32 = 1024;
 pub const RTE_PTYPE_L4_ICMP: u32 = 1280;
 pub const RTE_PTYPE_L4_NONFRAG: u32 = 1536;
 pub const RTE_PTYPE_L4_IGMP: u32 = 1792;
+pub const RTE_PTYPE_L4_ESP: u32 = 2048;
 pub const RTE_PTYPE_L4_MASK: u32 = 3840;
 pub const RTE_PTYPE_TUNNEL_IP: u32 = 4096;
 pub const RTE_PTYPE_TUNNEL_GRE: u32 = 8192;
@@ -827,6 +841,7 @@ pub const RTE_PTYPE_INNER_L4_FRAG: u32 = 50331648;
 pub const RTE_PTYPE_INNER_L4_SCTP: u32 = 67108864;
 pub const RTE_PTYPE_INNER_L4_ICMP: u32 = 83886080;
 pub const RTE_PTYPE_INNER_L4_NONFRAG: u32 = 100663296;
+pub const RTE_PTYPE_INNER_L4_ESP: u32 = 134217728;
 pub const RTE_PTYPE_INNER_L4_MASK: u32 = 251658240;
 pub const RTE_PTYPE_ALL_MASK: u32 = 268435455;
 pub const RTE_BIG_ENDIAN: u32 = 1;
@@ -949,8 +964,26 @@ pub const RTE_ARP_OP_REVREQUEST: u32 = 3;
 pub const RTE_ARP_OP_REVREPLY: u32 = 4;
 pub const RTE_ARP_OP_INVREQUEST: u32 = 8;
 pub const RTE_ARP_OP_INVREPLY: u32 = 9;
-pub const RTE_IP_ICMP_ECHO_REPLY: u32 = 0;
-pub const RTE_IP_ICMP_ECHO_REQUEST: u32 = 8;
+pub const RTE_ICMP_TYPE_ECHO_REPLY: u32 = 0;
+pub const RTE_ICMP_TYPE_DEST_UNREACHABLE: u32 = 3;
+pub const RTE_ICMP_TYPE_REDIRECT: u32 = 5;
+pub const RTE_ICMP_TYPE_ECHO_REQUEST: u32 = 8;
+pub const RTE_ICMP_TYPE_TTL_EXCEEDED: u32 = 11;
+pub const RTE_ICMP_TYPE_PARAM_PROBLEM: u32 = 12;
+pub const RTE_ICMP_TYPE_TIMESTAMP_REQUEST: u32 = 13;
+pub const RTE_ICMP_TYPE_TIMESTAMP_REPLY: u32 = 14;
+pub const RTE_ICMP_CODE_UNREACH_NET: u32 = 0;
+pub const RTE_ICMP_CODE_UNREACH_HOST: u32 = 1;
+pub const RTE_ICMP_CODE_UNREACH_PROTO: u32 = 2;
+pub const RTE_ICMP_CODE_UNREACH_PORT: u32 = 3;
+pub const RTE_ICMP_CODE_UNREACH_FRAG: u32 = 4;
+pub const RTE_ICMP_CODE_UNREACH_SRC: u32 = 5;
+pub const RTE_ICMP_CODE_TTL_EXCEEDED: u32 = 0;
+pub const RTE_ICMP_CODE_TTL_FRAG: u32 = 1;
+pub const RTE_ICMP_CODE_REDIRECT_NET: u32 = 0;
+pub const RTE_ICMP_CODE_REDIRECT_HOST: u32 = 1;
+pub const RTE_ICMP_CODE_REDIRECT_TOS_NET: u32 = 2;
+pub const RTE_ICMP_CODE_REDIRECT_TOS_HOST: u32 = 3;
 pub const RTE_ICMP6_ECHO_REQUEST: u32 = 128;
 pub const RTE_ICMP6_ECHO_REPLY: u32 = 129;
 pub const RTE_IPV4_MAX_PKT_LEN: u32 = 65535;
@@ -971,6 +1004,9 @@ pub const RTE_IPV4_HDR_OPT_NOP: u32 = 1;
 pub const RTE_IPV4_HDR_OPT_MAX_LEN: u32 = 40;
 pub const RTE_IPV4_MIN_IHL: u32 = 5;
 pub const RTE_IPV4_VHL_DEF: u32 = 69;
+pub const RTE_IPV6_ADDR_SIZE: u32 = 16;
+pub const RTE_IPV6_ADDR_FMT: &[u8; 72] =
+    b"%02x%02x:%02x%02x:%02x%02x:%02x%02x:%02x%02x:%02x%02x:%02x%02x:%02x%02x\0";
 pub const RTE_IPV6_SRCRT_TYPE_4: u32 = 4;
 pub const RTE_IPV6_HDR_FL_SHIFT: u32 = 0;
 pub const RTE_IPV6_HDR_TC_SHIFT: u32 = 20;
@@ -1490,11 +1526,11 @@ pub struct rte_mp_msg {
     pub len_param: ::std::os::raw::c_int,
     pub num_fds: ::std::os::raw::c_int,
     pub param: [u8; 256usize],
-    pub fds: [::std::os::raw::c_int; 8usize],
+    pub fds: [::std::os::raw::c_int; 253usize],
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
-    ["Size of rte_mp_msg"][::std::mem::size_of::<rte_mp_msg>() - 360usize];
+    ["Size of rte_mp_msg"][::std::mem::size_of::<rte_mp_msg>() - 1340usize];
     ["Alignment of rte_mp_msg"][::std::mem::align_of::<rte_mp_msg>() - 4usize];
     ["Offset of field: rte_mp_msg::name"][::std::mem::offset_of!(rte_mp_msg, name) - 0usize];
     ["Offset of field: rte_mp_msg::len_param"]
@@ -2023,7 +2059,7 @@ pub type rte_lcore_usage_cb = ::std::option::Option<
     ) -> ::std::os::raw::c_int,
 >;
 unsafe extern "C" {
-    #[doc = " @warning\n @b EXPERIMENTAL: this API may change without prior notice.\n\n Register a callback from an application to be called in rte_lcore_dump() and\n the /eal/lcore/info telemetry endpoint handler. Applications are expected to\n report lcore usage statistics via this callback.\n\n If a callback was already registered, it can be replaced with another callback\n or unregistered with NULL. The previously registered callback may remain in\n use for an undetermined period of time.\n\n @param cb\n   The callback function."]
+    #[doc = " Register a callback from an application to be called in rte_lcore_dump() and\n the /eal/lcore/info telemetry endpoint handler. Applications are expected to\n report lcore usage statistics via this callback.\n\n If a callback was already registered, it can be replaced with another callback\n or unregistered with NULL. The previously registered callback may remain in\n use for an undetermined period of time.\n\n @param cb\n   The callback function."]
     pub fn rte_lcore_register_usage_cb(cb: rte_lcore_usage_cb);
 }
 unsafe extern "C" {
@@ -2426,7 +2462,7 @@ impl rte_cpu_intrinsics {
     }
 }
 unsafe extern "C" {
-    #[doc = " @warning\n @b EXPERIMENTAL: this API may change without prior notice\n\n Check CPU support for various intrinsics at runtime.\n\n @param intrinsics\n     Pointer to a structure to be filled."]
+    #[doc = " Check CPU support for various intrinsics at runtime.\n\n @param intrinsics\n     Pointer to a structure to be filled."]
     pub fn rte_cpu_get_intrinsics_support(intrinsics: *mut rte_cpu_intrinsics);
 }
 unsafe extern "C" {
@@ -3141,11 +3177,11 @@ const _: () = {
     ["Offset of field: rte_memzone::flags"][::std::mem::offset_of!(rte_memzone, flags) - 68usize];
 };
 unsafe extern "C" {
-    #[doc = " @warning\n @b EXPERIMENTAL: this API may change without prior notice.\n\n Set the maximum number of memzones.\n\n This function can only be called prior to rte_eal_init().\n\n @param max\n   Maximum number of memzones.\n @return\n  0 on success, -1 otherwise."]
+    #[doc = " Set the maximum number of memzones.\n\n This function can only be called prior to rte_eal_init().\n\n @param max\n   Maximum number of memzones.\n @return\n  0 on success, -1 otherwise."]
     pub fn rte_memzone_max_set(max: usize) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
-    #[doc = " @warning\n @b EXPERIMENTAL: this API may change without prior notice.\n\n Get the maximum number of memzones.\n\n @note: The maximum value will not change after calling rte_eal_init().\n\n @return\n   Maximum number of memzones."]
+    #[doc = " Get the maximum number of memzones.\n\n @note: The maximum value will not change after calling rte_eal_init().\n\n @return\n   Maximum number of memzones."]
     pub fn rte_memzone_max_get() -> usize;
 }
 unsafe extern "C" {
@@ -4147,6 +4183,50 @@ unsafe extern "C" {
         dsize: usize,
     ) -> isize;
 }
+unsafe extern "C" {
+    #[doc = "  Test if trace is enabled.\n\n  @return\n     true if trace is enabled, false otherwise."]
+    pub fn rte_trace_is_enabled() -> bool;
+}
+#[doc = " In this mode, when no space is left in the trace buffer, the\n subsequent events overwrite the old events."]
+pub const rte_trace_mode_RTE_TRACE_MODE_OVERWRITE: rte_trace_mode = 0;
+#[doc = " In this mode, when no space is left in the trace buffer, the\n subsequent events shall not be recorded."]
+pub const rte_trace_mode_RTE_TRACE_MODE_DISCARD: rte_trace_mode = 1;
+#[doc = " Enumerate trace mode operation."]
+pub type rte_trace_mode = ::std::os::raw::c_uint;
+unsafe extern "C" {
+    #[doc = " Set the trace mode.\n\n @param mode\n   Trace mode."]
+    pub fn rte_trace_mode_set(mode: rte_trace_mode);
+}
+unsafe extern "C" {
+    #[doc = " Get the trace mode.\n\n @return\n   The current trace mode."]
+    pub fn rte_trace_mode_get() -> rte_trace_mode;
+}
+unsafe extern "C" {
+    #[doc = " Enable/Disable a set of tracepoints based on globbing pattern.\n\n @param pattern\n   The globbing pattern identifying the tracepoint.\n @param enable\n   true to enable tracepoint, false to disable the tracepoint, upon match.\n @return\n   - 0: Success and no pattern match.\n   - 1: Success and found pattern match.\n   - (-ERANGE): Tracepoint object is not registered."]
+    pub fn rte_trace_pattern(
+        pattern: *const ::std::os::raw::c_char,
+        enable: bool,
+    ) -> ::std::os::raw::c_int;
+}
+unsafe extern "C" {
+    #[doc = " Enable/Disable a set of tracepoints based on regular expression.\n\n @param regex\n   A regular expression identifying the tracepoint.\n @param enable\n   true to enable tracepoint, false to disable the tracepoint, upon match.\n @return\n   - 0: Success and no pattern match.\n   - 1: Success and found pattern match.\n   - (-ERANGE): Tracepoint object is not registered.\n   - (-EINVAL): Invalid regular expression rule."]
+    pub fn rte_trace_regexp(
+        regex: *const ::std::os::raw::c_char,
+        enable: bool,
+    ) -> ::std::os::raw::c_int;
+}
+unsafe extern "C" {
+    #[doc = " Save the trace buffer to the trace directory.\n\n By default, trace directory will be created at $HOME directory and this can\n be overridden by --trace-dir EAL parameter.\n\n @return\n   - 0: Success.\n   - <0 : Failure."]
+    pub fn rte_trace_save() -> ::std::os::raw::c_int;
+}
+unsafe extern "C" {
+    #[doc = " Dump the trace metadata to a file.\n\n @param f\n   A pointer to a file for output\n @return\n   - 0: Success.\n   - <0 : Failure."]
+    pub fn rte_trace_metadata_dump(f: *mut FILE) -> ::std::os::raw::c_int;
+}
+unsafe extern "C" {
+    #[doc = " Dump the trace subsystem status to a file.\n\n @param f\n   A pointer to a file for output"]
+    pub fn rte_trace_dump(f: *mut FILE);
+}
 #[doc = " The tracepoint object."]
 pub type rte_trace_point_t = u64;
 unsafe extern "C" {
@@ -4167,6 +4247,18 @@ unsafe extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+pub struct rte_eth_reg_name {
+    pub name: [::std::os::raw::c_char; 64usize],
+}
+#[allow(clippy::unnecessary_operation, clippy::identity_op)]
+const _: () = {
+    ["Size of rte_eth_reg_name"][::std::mem::size_of::<rte_eth_reg_name>() - 64usize];
+    ["Alignment of rte_eth_reg_name"][::std::mem::align_of::<rte_eth_reg_name>() - 1usize];
+    ["Offset of field: rte_eth_reg_name::name"]
+        [::std::mem::offset_of!(rte_eth_reg_name, name) - 0usize];
+};
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
 pub struct rte_dev_reg_info {
     #[doc = "< Buffer for return registers"]
     pub data: *mut ::std::os::raw::c_void,
@@ -4178,10 +4270,14 @@ pub struct rte_dev_reg_info {
     pub width: u32,
     #[doc = "< Device version"]
     pub version: u32,
+    #[doc = " Name of target module, filter for target subset of registers.\n This field could affects register selection for data/length/names."]
+    pub filter: *const ::std::os::raw::c_char,
+    #[doc = "< Registers name saver"]
+    pub names: *mut rte_eth_reg_name,
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
-    ["Size of rte_dev_reg_info"][::std::mem::size_of::<rte_dev_reg_info>() - 24usize];
+    ["Size of rte_dev_reg_info"][::std::mem::size_of::<rte_dev_reg_info>() - 40usize];
     ["Alignment of rte_dev_reg_info"][::std::mem::align_of::<rte_dev_reg_info>() - 8usize];
     ["Offset of field: rte_dev_reg_info::data"]
         [::std::mem::offset_of!(rte_dev_reg_info, data) - 0usize];
@@ -4193,6 +4289,10 @@ const _: () = {
         [::std::mem::offset_of!(rte_dev_reg_info, width) - 16usize];
     ["Offset of field: rte_dev_reg_info::version"]
         [::std::mem::offset_of!(rte_dev_reg_info, version) - 20usize];
+    ["Offset of field: rte_dev_reg_info::filter"]
+        [::std::mem::offset_of!(rte_dev_reg_info, filter) - 24usize];
+    ["Offset of field: rte_dev_reg_info::names"]
+        [::std::mem::offset_of!(rte_dev_reg_info, names) - 32usize];
 };
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -4481,6 +4581,24 @@ const _: () = {
 const _: () = {
     ["Size of rte_eth_link"][::std::mem::size_of::<rte_eth_link>() - 8usize];
     ["Alignment of rte_eth_link"][::std::mem::align_of::<rte_eth_link>() - 8usize];
+};
+#[doc = " A structure used to get and set lanes capabilities per link speed."]
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct rte_eth_speed_lanes_capa {
+    pub speed: u32,
+    pub capa: u32,
+}
+#[allow(clippy::unnecessary_operation, clippy::identity_op)]
+const _: () = {
+    ["Size of rte_eth_speed_lanes_capa"]
+        [::std::mem::size_of::<rte_eth_speed_lanes_capa>() - 8usize];
+    ["Alignment of rte_eth_speed_lanes_capa"]
+        [::std::mem::align_of::<rte_eth_speed_lanes_capa>() - 4usize];
+    ["Offset of field: rte_eth_speed_lanes_capa::speed"]
+        [::std::mem::offset_of!(rte_eth_speed_lanes_capa, speed) - 0usize];
+    ["Offset of field: rte_eth_speed_lanes_capa::capa"]
+        [::std::mem::offset_of!(rte_eth_speed_lanes_capa, capa) - 4usize];
 };
 #[doc = " A structure used to configure the ring threshold registers of an Rx/Tx\n queue for an Ethernet port."]
 #[repr(C)]
@@ -7678,7 +7796,7 @@ unsafe extern "C" {
     ) -> *mut rte_mbuf;
 }
 #[doc = " IPv4 Header"]
-#[repr(C, packed)]
+#[repr(C, packed(2))]
 #[derive(Copy, Clone)]
 pub struct rte_ipv4_hdr {
     pub __bindgen_anon_1: rte_ipv4_hdr__bindgen_ty_1,
@@ -7814,7 +7932,7 @@ const _: () = {
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
     ["Size of rte_ipv4_hdr"][::std::mem::size_of::<rte_ipv4_hdr>() - 20usize];
-    ["Alignment of rte_ipv4_hdr"][::std::mem::align_of::<rte_ipv4_hdr>() - 1usize];
+    ["Alignment of rte_ipv4_hdr"][::std::mem::align_of::<rte_ipv4_hdr>() - 2usize];
     ["Offset of field: rte_ipv4_hdr::type_of_service"]
         [::std::mem::offset_of!(rte_ipv4_hdr, type_of_service) - 1usize];
     ["Offset of field: rte_ipv4_hdr::total_length"]
@@ -7834,12 +7952,37 @@ const _: () = {
     ["Offset of field: rte_ipv4_hdr::dst_addr"]
         [::std::mem::offset_of!(rte_ipv4_hdr, dst_addr) - 16usize];
 };
-#[doc = " IPv6 Header"]
-#[repr(C, packed)]
+#[doc = " IPv6 Address"]
+#[repr(C)]
 #[derive(Debug, Copy, Clone)]
+pub struct rte_ipv6_addr {
+    pub a: [u8; 16usize],
+}
+#[allow(clippy::unnecessary_operation, clippy::identity_op)]
+const _: () = {
+    ["Size of rte_ipv6_addr"][::std::mem::size_of::<rte_ipv6_addr>() - 16usize];
+    ["Alignment of rte_ipv6_addr"][::std::mem::align_of::<rte_ipv6_addr>() - 1usize];
+    ["Offset of field: rte_ipv6_addr::a"][::std::mem::offset_of!(rte_ipv6_addr, a) - 0usize];
+};
+#[doc = " Invalid multicast scope."]
+pub const rte_ipv6_mc_scope_RTE_IPV6_MC_SCOPE_NONE: rte_ipv6_mc_scope = 0;
+#[doc = " Interface-local multicast scope."]
+pub const rte_ipv6_mc_scope_RTE_IPV6_MC_SCOPE_IFACELOCAL: rte_ipv6_mc_scope = 1;
+#[doc = " Link-local multicast scope."]
+pub const rte_ipv6_mc_scope_RTE_IPV6_MC_SCOPE_LINKLOCAL: rte_ipv6_mc_scope = 2;
+#[doc = " Site-local multicast scope."]
+pub const rte_ipv6_mc_scope_RTE_IPV6_MC_SCOPE_SITELOCAL: rte_ipv6_mc_scope = 5;
+#[doc = " Organizational-local multicast scope."]
+pub const rte_ipv6_mc_scope_RTE_IPV6_MC_SCOPE_ORGLOCAL: rte_ipv6_mc_scope = 8;
+#[doc = " Global multicast scope."]
+pub const rte_ipv6_mc_scope_RTE_IPV6_MC_SCOPE_GLOBAL: rte_ipv6_mc_scope = 14;
+#[doc = " IPv6 multicast scope values as defined in RFC 4291, section 2.7."]
+pub type rte_ipv6_mc_scope = ::std::os::raw::c_uchar;
+#[doc = " IPv6 Header"]
+#[repr(C, packed(2))]
+#[derive(Copy, Clone)]
 pub struct rte_ipv6_hdr {
-    #[doc = "< IP version, traffic class & flow label."]
-    pub vtc_flow: rte_be32_t,
+    pub __bindgen_anon_1: rte_ipv6_hdr__bindgen_ty_1,
     #[doc = "< IP payload size, including ext. headers"]
     pub payload_len: rte_be16_t,
     #[doc = "< Protocol, next header."]
@@ -7847,16 +7990,203 @@ pub struct rte_ipv6_hdr {
     #[doc = "< Hop limits."]
     pub hop_limits: u8,
     #[doc = "< IP address of source host."]
-    pub src_addr: [u8; 16usize],
+    pub src_addr: rte_ipv6_addr,
     #[doc = "< IP address of destination host(s)."]
-    pub dst_addr: [u8; 16usize],
+    pub dst_addr: rte_ipv6_addr,
+}
+#[repr(C)]
+#[derive(Copy, Clone)]
+pub union rte_ipv6_hdr__bindgen_ty_1 {
+    #[doc = "< IP version, traffic class & flow label."]
+    pub vtc_flow: rte_be32_t,
+    pub __bindgen_anon_1: rte_ipv6_hdr__bindgen_ty_1__bindgen_ty_1,
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct rte_ipv6_hdr__bindgen_ty_1__bindgen_ty_1 {
+    pub _bitfield_align_1: [u32; 0],
+    pub _bitfield_1: __BindgenBitfieldUnit<[u8; 4usize]>,
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
+    ["Size of rte_ipv6_hdr__bindgen_ty_1__bindgen_ty_1"]
+        [::std::mem::size_of::<rte_ipv6_hdr__bindgen_ty_1__bindgen_ty_1>() - 4usize];
+    ["Alignment of rte_ipv6_hdr__bindgen_ty_1__bindgen_ty_1"]
+        [::std::mem::align_of::<rte_ipv6_hdr__bindgen_ty_1__bindgen_ty_1>() - 4usize];
+};
+impl rte_ipv6_hdr__bindgen_ty_1__bindgen_ty_1 {
+    #[inline]
+    pub fn flow_label(&self) -> u32 {
+        unsafe { ::std::mem::transmute(self._bitfield_1.get(0usize, 20u8) as u32) }
+    }
+    #[inline]
+    pub fn set_flow_label(&mut self, val: u32) {
+        unsafe {
+            let val: u32 = ::std::mem::transmute(val);
+            self._bitfield_1.set(0usize, 20u8, val as u64)
+        }
+    }
+    #[inline]
+    pub unsafe fn flow_label_raw(this: *const Self) -> u32 {
+        unsafe {
+            ::std::mem::transmute(<__BindgenBitfieldUnit<[u8; 4usize]>>::raw_get(
+                ::std::ptr::addr_of!((*this)._bitfield_1),
+                0usize,
+                20u8,
+            ) as u32)
+        }
+    }
+    #[inline]
+    pub unsafe fn set_flow_label_raw(this: *mut Self, val: u32) {
+        unsafe {
+            let val: u32 = ::std::mem::transmute(val);
+            <__BindgenBitfieldUnit<[u8; 4usize]>>::raw_set(
+                ::std::ptr::addr_of_mut!((*this)._bitfield_1),
+                0usize,
+                20u8,
+                val as u64,
+            )
+        }
+    }
+    #[inline]
+    pub fn ecn(&self) -> u32 {
+        unsafe { ::std::mem::transmute(self._bitfield_1.get(20usize, 2u8) as u32) }
+    }
+    #[inline]
+    pub fn set_ecn(&mut self, val: u32) {
+        unsafe {
+            let val: u32 = ::std::mem::transmute(val);
+            self._bitfield_1.set(20usize, 2u8, val as u64)
+        }
+    }
+    #[inline]
+    pub unsafe fn ecn_raw(this: *const Self) -> u32 {
+        unsafe {
+            ::std::mem::transmute(<__BindgenBitfieldUnit<[u8; 4usize]>>::raw_get(
+                ::std::ptr::addr_of!((*this)._bitfield_1),
+                20usize,
+                2u8,
+            ) as u32)
+        }
+    }
+    #[inline]
+    pub unsafe fn set_ecn_raw(this: *mut Self, val: u32) {
+        unsafe {
+            let val: u32 = ::std::mem::transmute(val);
+            <__BindgenBitfieldUnit<[u8; 4usize]>>::raw_set(
+                ::std::ptr::addr_of_mut!((*this)._bitfield_1),
+                20usize,
+                2u8,
+                val as u64,
+            )
+        }
+    }
+    #[inline]
+    pub fn ds(&self) -> u32 {
+        unsafe { ::std::mem::transmute(self._bitfield_1.get(22usize, 6u8) as u32) }
+    }
+    #[inline]
+    pub fn set_ds(&mut self, val: u32) {
+        unsafe {
+            let val: u32 = ::std::mem::transmute(val);
+            self._bitfield_1.set(22usize, 6u8, val as u64)
+        }
+    }
+    #[inline]
+    pub unsafe fn ds_raw(this: *const Self) -> u32 {
+        unsafe {
+            ::std::mem::transmute(<__BindgenBitfieldUnit<[u8; 4usize]>>::raw_get(
+                ::std::ptr::addr_of!((*this)._bitfield_1),
+                22usize,
+                6u8,
+            ) as u32)
+        }
+    }
+    #[inline]
+    pub unsafe fn set_ds_raw(this: *mut Self, val: u32) {
+        unsafe {
+            let val: u32 = ::std::mem::transmute(val);
+            <__BindgenBitfieldUnit<[u8; 4usize]>>::raw_set(
+                ::std::ptr::addr_of_mut!((*this)._bitfield_1),
+                22usize,
+                6u8,
+                val as u64,
+            )
+        }
+    }
+    #[inline]
+    pub fn version(&self) -> u32 {
+        unsafe { ::std::mem::transmute(self._bitfield_1.get(28usize, 4u8) as u32) }
+    }
+    #[inline]
+    pub fn set_version(&mut self, val: u32) {
+        unsafe {
+            let val: u32 = ::std::mem::transmute(val);
+            self._bitfield_1.set(28usize, 4u8, val as u64)
+        }
+    }
+    #[inline]
+    pub unsafe fn version_raw(this: *const Self) -> u32 {
+        unsafe {
+            ::std::mem::transmute(<__BindgenBitfieldUnit<[u8; 4usize]>>::raw_get(
+                ::std::ptr::addr_of!((*this)._bitfield_1),
+                28usize,
+                4u8,
+            ) as u32)
+        }
+    }
+    #[inline]
+    pub unsafe fn set_version_raw(this: *mut Self, val: u32) {
+        unsafe {
+            let val: u32 = ::std::mem::transmute(val);
+            <__BindgenBitfieldUnit<[u8; 4usize]>>::raw_set(
+                ::std::ptr::addr_of_mut!((*this)._bitfield_1),
+                28usize,
+                4u8,
+                val as u64,
+            )
+        }
+    }
+    #[inline]
+    pub fn new_bitfield_1(
+        flow_label: u32,
+        ecn: u32,
+        ds: u32,
+        version: u32,
+    ) -> __BindgenBitfieldUnit<[u8; 4usize]> {
+        let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize]> = Default::default();
+        __bindgen_bitfield_unit.set(0usize, 20u8, {
+            let flow_label: u32 = unsafe { ::std::mem::transmute(flow_label) };
+            flow_label as u64
+        });
+        __bindgen_bitfield_unit.set(20usize, 2u8, {
+            let ecn: u32 = unsafe { ::std::mem::transmute(ecn) };
+            ecn as u64
+        });
+        __bindgen_bitfield_unit.set(22usize, 6u8, {
+            let ds: u32 = unsafe { ::std::mem::transmute(ds) };
+            ds as u64
+        });
+        __bindgen_bitfield_unit.set(28usize, 4u8, {
+            let version: u32 = unsafe { ::std::mem::transmute(version) };
+            version as u64
+        });
+        __bindgen_bitfield_unit
+    }
+}
+#[allow(clippy::unnecessary_operation, clippy::identity_op)]
+const _: () = {
+    ["Size of rte_ipv6_hdr__bindgen_ty_1"]
+        [::std::mem::size_of::<rte_ipv6_hdr__bindgen_ty_1>() - 4usize];
+    ["Alignment of rte_ipv6_hdr__bindgen_ty_1"]
+        [::std::mem::align_of::<rte_ipv6_hdr__bindgen_ty_1>() - 4usize];
+    ["Offset of field: rte_ipv6_hdr__bindgen_ty_1::vtc_flow"]
+        [::std::mem::offset_of!(rte_ipv6_hdr__bindgen_ty_1, vtc_flow) - 0usize];
+};
+#[allow(clippy::unnecessary_operation, clippy::identity_op)]
+const _: () = {
     ["Size of rte_ipv6_hdr"][::std::mem::size_of::<rte_ipv6_hdr>() - 40usize];
-    ["Alignment of rte_ipv6_hdr"][::std::mem::align_of::<rte_ipv6_hdr>() - 1usize];
-    ["Offset of field: rte_ipv6_hdr::vtc_flow"]
-        [::std::mem::offset_of!(rte_ipv6_hdr, vtc_flow) - 0usize];
+    ["Alignment of rte_ipv6_hdr"][::std::mem::align_of::<rte_ipv6_hdr>() - 2usize];
     ["Offset of field: rte_ipv6_hdr::payload_len"]
         [::std::mem::offset_of!(rte_ipv6_hdr, payload_len) - 4usize];
     ["Offset of field: rte_ipv6_hdr::proto"][::std::mem::offset_of!(rte_ipv6_hdr, proto) - 6usize];
@@ -9059,6 +9389,8 @@ pub const rte_flow_action_type_RTE_FLOW_ACTION_TYPE_INDIRECT_LIST: rte_flow_acti
 pub const rte_flow_action_type_RTE_FLOW_ACTION_TYPE_PROG: rte_flow_action_type = 63;
 #[doc = " NAT64 translation of IPv4/IPv6 headers.\n\n @see struct rte_flow_action_nat64"]
 pub const rte_flow_action_type_RTE_FLOW_ACTION_TYPE_NAT64: rte_flow_action_type = 64;
+#[doc = " RTE_FLOW_ACTION_TYPE_JUMP_TO_TABLE_INDEX,\n\n Redirects packets to a particular index in a flow table.\n\n @see struct rte_flow_action_jump_to_table_index."]
+pub const rte_flow_action_type_RTE_FLOW_ACTION_TYPE_JUMP_TO_TABLE_INDEX: rte_flow_action_type = 65;
 #[doc = " Action types.\n\n Each possible action is represented by a type.\n An action can have an associated configuration object.\n Several actions combined in a list can be assigned\n to a flow rule and are performed in order.\n\n They fall in three categories:\n\n - Actions that modify the fate of matching traffic, for instance by\n   dropping or assigning it a specific destination.\n\n - Actions that modify matching traffic contents or its properties. This\n   includes adding/removing encapsulation, encryption, compression and\n   marks.\n\n - Actions related to the flow rule itself, such as updating counters or\n   making it non-terminating.\n\n Flow rules being terminating by default, not specifying any action of the\n fate kind results in undefined behavior. This applies to both ingress and\n egress.\n\n PASSTHRU, when supported, makes a flow rule non-terminating."]
 pub type rte_flow_action_type = ::std::os::raw::c_uint;
 #[doc = " @warning\n @b EXPERIMENTAL: this structure may change without prior notice\n\n RTE_FLOW_ACTION_TYPE_INDIRECT\n\n Opaque type returned after successfully creating an indirect action object.\n The definition of the object handle is different per driver or\n per direct action type.\n\n This handle can be used to manage and query the related direct action:\n - referenced in single flow rule or across multiple flow rules\n   over multiple ports\n - update action object configuration\n - query action object data\n - destroy action object"]
@@ -9550,9 +9882,9 @@ const _: () = {
 #[derive(Debug, Copy, Clone)]
 pub struct rte_flow_tunnel__bindgen_ty_1__bindgen_ty_2 {
     #[doc = "< IPv6 source address."]
-    pub src_addr: [u8; 16usize],
+    pub src_addr: rte_ipv6_addr,
     #[doc = "< IPv6 destination address."]
-    pub dst_addr: [u8; 16usize],
+    pub dst_addr: rte_ipv6_addr,
 }
 #[allow(clippy::unnecessary_operation, clippy::identity_op)]
 const _: () = {
@@ -10193,6 +10525,9 @@ pub const rte_flow_table_insertion_type_RTE_FLOW_TABLE_INSERTION_TYPE_PATTERN:
 #[doc = " Index-based insertion."]
 pub const rte_flow_table_insertion_type_RTE_FLOW_TABLE_INSERTION_TYPE_INDEX:
     rte_flow_table_insertion_type = 1;
+#[doc = " Index-based insertion with pattern."]
+pub const rte_flow_table_insertion_type_RTE_FLOW_TABLE_INSERTION_TYPE_INDEX_WITH_PATTERN:
+    rte_flow_table_insertion_type = 2;
 #[doc = " @warning\n @b EXPERIMENTAL: this API may change without prior notice.\n\n Template table flow rules insertion type."]
 pub type rte_flow_table_insertion_type = ::std::os::raw::c_uint;
 #[doc = " Default hash calculation."]
@@ -10355,6 +10690,22 @@ unsafe extern "C" {
         op_attr: *const rte_flow_op_attr,
         template_table: *mut rte_flow_template_table,
         rule_index: u32,
+        actions: *const rte_flow_action,
+        actions_template_index: u8,
+        user_data: *mut ::std::os::raw::c_void,
+        error: *mut rte_flow_error,
+    ) -> *mut rte_flow;
+}
+unsafe extern "C" {
+    #[doc = " @warning\n @b EXPERIMENTAL: this API may change without prior notice.\n\n Enqueue rule creation by index with pattern operation.\n Packets are only matched if there is a rule inserted at the index.\n\n @param port_id\n   Port identifier of Ethernet device.\n @param queue_id\n   Flow queue used to insert the rule.\n @param[in] op_attr\n   Rule creation operation attributes.\n @param[in] template_table\n   Template table to select templates from.\n @param[in] rule_index\n   Rule index in the table.\n   Inserting a rule to already occupied index results in undefined behavior.\n @param[in] pattern\n   List of pattern items to be used.\n   The list order should match the order in the pattern template.\n   The spec is the only relevant member of the item that is being used.\n @param[in] pattern_template_index\n   Pattern template index in the table.\n @param[in] actions\n   List of actions to be used.\n   The list order should match the order in the actions template.\n @param[in] actions_template_index\n   Actions template index in the table.\n @param[in] user_data\n   The user data that will be returned on the completion events.\n @param[out] error\n   Perform verbose error reporting if not NULL.\n   PMDs initialize this structure in case of error only.\n\n @return\n   Handle on success, NULL otherwise and rte_errno is set.\n   The rule handle doesn't mean that the rule has been populated.\n   Only completion result indicates that if there was success or failure."]
+    pub fn rte_flow_async_create_by_index_with_pattern(
+        port_id: u16,
+        queue_id: u32,
+        op_attr: *const rte_flow_op_attr,
+        template_table: *mut rte_flow_template_table,
+        rule_index: u32,
+        pattern: *const rte_flow_item,
+        pattern_template_index: u8,
         actions: *const rte_flow_action,
         actions_template_index: u8,
         user_data: *mut ::std::os::raw::c_void,
@@ -11796,6 +12147,22 @@ unsafe extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
+    #[doc = " @warning\n @b EXPERIMENTAL: this API may change, or be removed, without prior notice\n\n Get Active lanes.\n\n @param port_id\n   The port identifier of the Ethernet device.\n @param lanes\n   Driver updates lanes with the number of active lanes.\n   On a supported NIC on link up, lanes will be a non-zero value irrespective whether the\n   link is Autonegotiated or Fixed speed. No information is displayed for error.\n\n @return\n   - (0) if successful.\n   - (-ENOTSUP) if underlying hardware OR driver doesn't support.\n     that operation.\n   - (-EIO) if device is removed.\n   - (-ENODEV)  if *port_id* invalid."]
+    pub fn rte_eth_speed_lanes_get(port_id: u16, lanes: *mut u32) -> ::std::os::raw::c_int;
+}
+unsafe extern "C" {
+    #[doc = " @warning\n @b EXPERIMENTAL: this API may change, or be removed, without prior notice\n\n Set speed lanes supported by the NIC.\n\n @param port_id\n   The port identifier of the Ethernet device.\n @param speed_lanes\n   A non-zero number of speed lanes, that will be applied to the ethernet PHY\n   along with the fixed speed configuration. Driver returns error if the user\n   lanes is not in speeds capability list.\n\n @return\n   - (0) if successful.\n   - (-ENOTSUP) if underlying hardware OR driver doesn't support.\n     that operation.\n   - (-EIO) if device is removed.\n   - (-ENODEV)  if *port_id* invalid.\n   - (-EINVAL)  if *lanes* count not in speeds capability list."]
+    pub fn rte_eth_speed_lanes_set(port_id: u16, speed_lanes: u32) -> ::std::os::raw::c_int;
+}
+unsafe extern "C" {
+    #[doc = " @warning\n @b EXPERIMENTAL: this API may change, or be removed, without prior notice\n\n Get speed lanes supported by the NIC.\n\n @param port_id\n   The port identifier of the Ethernet device.\n @param speed_lanes_capa\n   An array of supported speed and its supported lanes.\n @param num\n   Size of the speed_lanes_capa array. The size is equal to the supported speeds list size.\n   Value of num is derived by calling this api with speed_lanes_capa=NULL and num=0\n\n @return\n   - (0) if successful.\n   - (-ENOTSUP) if underlying hardware OR driver doesn't support.\n     that operation.\n   - (-EIO) if device is removed.\n   - (-ENODEV)  if *port_id* invalid.\n   - (-EINVAL)  if *speed_lanes* invalid"]
+    pub fn rte_eth_speed_lanes_get_capability(
+        port_id: u16,
+        speed_lanes_capa: *mut rte_eth_speed_lanes_capa,
+        num: ::std::os::raw::c_uint,
+    ) -> ::std::os::raw::c_int;
+}
+unsafe extern "C" {
     #[doc = " Retrieve the general I/O statistics of an Ethernet device.\n\n @param port_id\n   The port identifier of the Ethernet device.\n @param stats\n   A pointer to a structure of type *rte_eth_stats* to be filled with\n   the values of device counters for the following set of statistics:\n   - *ipackets* with the total of successfully received packets.\n   - *opackets* with the total of successfully transmitted packets.\n   - *ibytes*   with the total of successfully received bytes.\n   - *obytes*   with the total of successfully transmitted bytes.\n   - *ierrors*  with the total of erroneous received packets.\n   - *oerrors*  with the total of failed transmitted packets.\n @return\n   Zero if successful. Non-zero otherwise."]
     pub fn rte_eth_stats_get(port_id: u16, stats: *mut rte_eth_stats) -> ::std::os::raw::c_int;
 }
@@ -12414,6 +12781,13 @@ unsafe extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
+    #[doc = " Retrieve the filtered device registers (values and names) and\n register attributes (number of registers and register size)\n\n @param port_id\n   The port identifier of the Ethernet device.\n @param info\n   Pointer to rte_dev_reg_info structure to fill in.\n   - If info->filter is NULL, return info for all registers (seen as filter\n     none).\n   - If info->filter is not NULL, return error if the driver does not support\n     filter. Fill the length field with filtered register number.\n   - If info->data is NULL, the function fills in the width and length fields.\n   - If info->data is not NULL, ethdev considers there are enough spaces to\n     store the registers, and the values of registers with the filter string\n     as the module name are put into the buffer pointed at by info->data.\n   - If info->names is not NULL, drivers should fill it or the ethdev fills it\n     with default names.\n @return\n   - (0) if successful.\n   - (-ENOTSUP) if hardware doesn't support.\n   - (-EINVAL) if bad parameter.\n   - (-ENODEV) if *port_id* invalid.\n   - (-EIO) if device is removed.\n   - others depends on the specific operations implementation."]
+    pub fn rte_eth_dev_get_reg_info_ext(
+        port_id: u16,
+        info: *mut rte_dev_reg_info,
+    ) -> ::std::os::raw::c_int;
+}
+unsafe extern "C" {
     #[doc = " Retrieve device registers and register attributes (number of registers and\n register size)\n\n @param port_id\n   The port identifier of the Ethernet device.\n @param info\n   Pointer to rte_dev_reg_info structure to fill in. If info->data is\n   NULL the function fills in the width and length fields. If non-NULL\n   the registers are put into the buffer pointed at by the data field.\n @return\n   - (0) if successful.\n   - (-ENOTSUP) if hardware doesn't support.\n   - (-EINVAL) if bad parameter.\n   - (-ENODEV) if *port_id* invalid.\n   - (-EIO) if device is removed.\n   - others depends on the specific operations implementation."]
     pub fn rte_eth_dev_get_reg_info(
         port_id: u16,
@@ -12486,6 +12860,10 @@ unsafe extern "C" {
 unsafe extern "C" {
     #[doc = " Adjust the timesync clock on an Ethernet device.\n\n This is usually used in conjunction with other Ethdev timesync functions to\n synchronize the device time using the IEEE1588/802.1AS protocol.\n\n @param port_id\n   The port identifier of the Ethernet device.\n @param delta\n   The adjustment in nanoseconds.\n\n @return\n   - 0: Success.\n   - -ENODEV: The port ID is invalid.\n   - -EIO: if device is removed.\n   - -ENOTSUP: The function is not supported by the Ethernet driver."]
     pub fn rte_eth_timesync_adjust_time(port_id: u16, delta: i64) -> ::std::os::raw::c_int;
+}
+unsafe extern "C" {
+    #[doc = " Adjust the clock frequency on an Ethernet device.\n\n Adjusts the base frequency by a specified percentage of ppm (parts per\n million). This is usually used in conjunction with other Ethdev timesync\n functions to synchronize the device time using the IEEE1588/802.1AS\n protocol.\n\n The clock is subject to frequency deviation and rate of change drift due to\n the environment. The upper layer APP calculates the frequency compensation\n value of the slave clock relative to the master clock via a servo algorithm\n and adjusts the device clock frequency via \"rte_eth_timesync_adjust_freq()\".\n Commonly used servo algorithms are pi/linreg/ntpshm, for implementation\n see: https://github.com/nxp-archive/openil_linuxptp.git.\n\n The adjustment value obtained by the servo algorithm is usually in\n ppb (parts per billion). For consistency with the kernel driver .adjfine,\n the tuning values are in ppm. Note that 1 ppb is approximately 65.536 scaled\n ppm, see Linux kernel upstream commit 1060707e3809 (‘ptp: introduce helpers\n to adjust by scaled parts per million’).\n\n In addition, the device reference frequency is usually also the stepping\n threshold for the servo algorithm, and the frequency up and down adjustment\n range is limited by the device. The device clock frequency should be\n adjusted with \"rte_eth_timesync_adjust_freq()\" every time the clock is\n synchronised. Also use ‘rte_eth_timesync_adjust_time()’ to update the device\n clock only if the absolute value of the master/slave clock offset is greater than\n or equal to the step threshold.\n\n @param port_id\n  The port identifier of the Ethernet device.\n @param ppm\n  Parts per million with 16-bit fractional field\n\n @return\n   - 0: Success.\n   - -ENODEV: The port ID is invalid.\n   - -EIO: if device is removed.\n   - -ENOTSUP: The function is not supported by the Ethernet driver."]
+    pub fn rte_eth_timesync_adjust_freq(port_id: u16, ppm: i64) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     #[doc = " Read the time from the timesync clock on an Ethernet device.\n\n This is usually used in conjunction with other Ethdev timesync functions to\n synchronize the device time using the IEEE1588/802.1AS protocol.\n\n @param port_id\n   The port identifier of the Ethernet device.\n @param time\n   Pointer to the timespec struct that holds the time.\n\n @return\n   - 0: Success.\n   - -EINVAL: Bad parameter."]
@@ -14177,7 +14555,18 @@ unsafe extern "C" {
     ) -> *const ::std::os::raw::c_char;
 }
 unsafe extern "C" {
-    pub fn deepeedeekay_rte_ethdev_trace_rx_burst(
+    #[doc = "warning\nthis API may change, or be removed, without prior notice\nTest if trace feature is enabled at compile time.\n\nreturn\ntrue if trace feature is enabled, false otherwise."]
+    pub fn deepeedeekay_rte_trace_feature_is_enabled() -> bool;
+}
+unsafe extern "C" {
+    pub fn deepeedeekay_rte_ethdev_trace_rx_burst_empty(
+        port_id: u16,
+        queue_id: u16,
+        pkt_tbl: *mut *mut ::std::os::raw::c_void,
+    );
+}
+unsafe extern "C" {
+    pub fn deepeedeekay_rte_ethdev_trace_rx_burst_nonempty(
         port_id: u16,
         queue_id: u16,
         pkt_tbl: *mut *mut ::std::os::raw::c_void,
@@ -14193,7 +14582,15 @@ unsafe extern "C" {
     );
 }
 unsafe extern "C" {
-    pub fn deepeedeekay_rte_eth_trace_call_rx_callbacks(
+    pub fn deepeedeekay_rte_eth_trace_call_rx_callbacks_empty(
+        port_id: u16,
+        queue_id: u16,
+        rx_pkts: *mut *mut ::std::os::raw::c_void,
+        nb_pkts: u16,
+    );
+}
+unsafe extern "C" {
+    pub fn deepeedeekay_rte_eth_trace_call_rx_callbacks_nonempty(
         port_id: u16,
         queue_id: u16,
         rx_pkts: *mut *mut ::std::os::raw::c_void,
@@ -14889,10 +15286,6 @@ unsafe extern "C" {
     pub fn deepeedeekay_rte_vlan_insert(m: *mut *mut rte_mbuf) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
-    #[doc = "Get the length of an IPv4 header.\n\nin param ipv4_hdr\nPointer to the IPv4 header.\nreturn\nThe length of the IPv4 header (with options if present) in bytes."]
-    pub fn deepeedeekay_rte_ipv4_hdr_len(ipv4_hdr: *const rte_ipv4_hdr) -> u8;
-}
-unsafe extern "C" {
     #[doc = "Process the non-complemented checksum of a buffer.\n\nin param buf\nPointer to the buffer.\nin param len\nLength of the buffer.\nreturn\nThe non-complemented checksum."]
     pub fn deepeedeekay_rte_raw_cksum(buf: *const ::std::os::raw::c_void, len: usize) -> u16;
 }
@@ -14906,8 +15299,16 @@ unsafe extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
+    #[doc = "Get the length of an IPv4 header.\n\nin param ipv4_hdr\nPointer to the IPv4 header.\nreturn\nThe length of the IPv4 header (with options if present) in bytes."]
+    pub fn deepeedeekay_rte_ipv4_hdr_len(ipv4_hdr: *const rte_ipv4_hdr) -> u8;
+}
+unsafe extern "C" {
     #[doc = "Process the IPv4 checksum of an IPv4 header.\nThe checksum field must be set to 0 by the caller.\n\nin param ipv4_hdr\nThe pointer to the contiguous IPv4 header.\nreturn\nThe complemented checksum to set in the IP packet."]
     pub fn deepeedeekay_rte_ipv4_cksum(ipv4_hdr: *const rte_ipv4_hdr) -> u16;
+}
+unsafe extern "C" {
+    #[doc = "warning\nthis API may change without prior notice.\nProcess the IPv4 checksum of an IPv4 header without any extensions.\nThe checksum field does NOT have to be set by the caller, the field is skipped by the calculation.\n\nin param ipv4_hdr\nThe pointer to the contiguous IPv4 header.\nreturn\nThe complemented checksum to set in the IP packet."]
+    pub fn deepeedeekay_rte_ipv4_cksum_simple(ipv4_hdr: *const rte_ipv4_hdr) -> u16;
 }
 unsafe extern "C" {
     #[doc = "Process the pseudo-header checksum of an IPv4 header.\nThe checksum field must be set to 0 by the caller.\nDepending on the ol_flags, the pseudo-header checksum expected by the drivers is not the same. For instance, when TSO is enabled, the IP payload length must not be included in the packet.\nWhen ol_flags is 0, it computes the standard pseudo-header checksum.\n\nin param ipv4_hdr\nThe pointer to the contiguous IPv4 header.\nin param ol_flags\nThe ol_flags of the associated mbuf.\nreturn\nThe non-complemented checksum to set in the L4 header."]
@@ -14942,6 +15343,82 @@ unsafe extern "C" {
         ipv4_hdr: *const rte_ipv4_hdr,
         l4_off: u16,
     ) -> ::std::os::raw::c_int;
+}
+unsafe extern "C" {
+    #[doc = "Check if two IPv6 Addresses are equal.\n\nin param a\nThe first address.\nin param b\nThe second address.\nreturn\ntrue if both addresses are identical."]
+    pub fn deepeedeekay_rte_ipv6_addr_eq(a: *const rte_ipv6_addr, b: *const rte_ipv6_addr) -> bool;
+}
+unsafe extern "C" {
+    #[doc = "Mask an IPv6 address using the specified depth.\nLeave untouched one bit per unit in the depth variable and set the rest to 0.\n\nin param ip\nThe address to mask.\nout param depth\nAll bits starting from this bit number will be set to zero."]
+    pub fn deepeedeekay_rte_ipv6_addr_mask(ip: *mut rte_ipv6_addr, depth: u8);
+}
+unsafe extern "C" {
+    #[doc = "Check if two IPv6 addresses belong to the same network prefix.\n\nin param a\nThe first address or network.\nin param b\nThe second address or network.\nin param depth\nThe network prefix length.\nreturn\nif the first  bits of both addresses are identical."]
+    pub fn deepeedeekay_rte_ipv6_addr_eq_prefix(
+        a: *const rte_ipv6_addr,
+        b: *const rte_ipv6_addr,
+        depth: u8,
+    ) -> bool;
+}
+unsafe extern "C" {
+    #[doc = "Get the depth of a given IPv6 address mask.\n\nin param mask\nThe address mask.\nreturn\nThe number of consecutive bits set to 1 starting from the beginning of the mask."]
+    pub fn deepeedeekay_rte_ipv6_mask_depth(mask: *const rte_ipv6_addr) -> u8;
+}
+unsafe extern "C" {
+    #[doc = "Check if an IPv6 address is unspecified as defined in RFC 4291, section 2.5.2.\n\nin param ip\nThe address to check.\nreturn\nif the address is the unspecified address (all zeroes)."]
+    pub fn deepeedeekay_rte_ipv6_addr_is_unspec(ip: *const rte_ipv6_addr) -> bool;
+}
+unsafe extern "C" {
+    #[doc = "Check if an IPv6 address is the loopback address as defined in RFC 4291, section 2.5.3.\n\nin param ip\nThe address to check.\nreturn\nif the address is the loopback address (all zeroes except the last bit)."]
+    pub fn deepeedeekay_rte_ipv6_addr_is_loopback(ip: *const rte_ipv6_addr) -> bool;
+}
+unsafe extern "C" {
+    #[doc = "Check if an IPv6 address is link-local as defined in RFC 4291, section 2.5.6.\n\nin param ip\nThe address to check.\nreturn\nif the address is a link-local address."]
+    pub fn deepeedeekay_rte_ipv6_addr_is_linklocal(ip: *const rte_ipv6_addr) -> bool;
+}
+unsafe extern "C" {
+    #[doc = "Check if an IPv6 address is site-local as defined in RFC 4291, section 2.5.7.\n\nin param ip\nThe address to check.\nreturn\nif the address is a site-local address."]
+    pub fn deepeedeekay_rte_ipv6_addr_is_sitelocal(ip: *const rte_ipv6_addr) -> bool;
+}
+unsafe extern "C" {
+    #[doc = "Check if an IPv6 address is an IPv4-compatible address as defined in RFC 4291, section 2.5.5.1.\n\nin param ip\nThe address to check.\nreturn\nif the address is an IPv4-compatible address."]
+    pub fn deepeedeekay_rte_ipv6_addr_is_v4compat(ip: *const rte_ipv6_addr) -> bool;
+}
+unsafe extern "C" {
+    #[doc = "Check if an IPv6 address is an IPv4-mapped address as defined in RFC 4291, section 2.5.5.2.\n\nin param ip\nThe address to check.\nreturn\nif the address is an IPv4-mapped address."]
+    pub fn deepeedeekay_rte_ipv6_addr_is_v4mapped(ip: *const rte_ipv6_addr) -> bool;
+}
+unsafe extern "C" {
+    #[doc = "Check if an IPv6 address is multicast as defined in RFC 4291, section 2.7.\n\nin param ip\nThe address to check.\nreturn\nif the address is multicast."]
+    pub fn deepeedeekay_rte_ipv6_addr_is_mcast(ip: *const rte_ipv6_addr) -> bool;
+}
+unsafe extern "C" {
+    #[doc = "Extract the IPv6 multicast scope value as defined in RFC 4291, section 2.7.\n\nin param ip\nThe address from which to get the multicast scope.\nreturn\nThe multicast scope of the address, or #RTE_IPV6_MC_SCOPE_NONE if the   address is not multicast."]
+    pub fn deepeedeekay_rte_ipv6_mc_scope(ip: *const rte_ipv6_addr) -> rte_ipv6_mc_scope;
+}
+unsafe extern "C" {
+    pub fn deepeedeekay_rte_ipv6_llocal_from_ethernet(
+        ip: *mut rte_ipv6_addr,
+        mac: *const rte_ether_addr,
+    );
+}
+unsafe extern "C" {
+    #[doc = "Convert a unicast or anycast IPv6 address to a solicited-node multicast address as defined in RFC 4291, section 2.7.1.\n\nout param sol\nThe IPv6 solicited-node multicast address to generate.\nin param ip\nA unicast or anycast address."]
+    pub fn deepeedeekay_rte_ipv6_solnode_from_addr(
+        sol: *mut rte_ipv6_addr,
+        ip: *const rte_ipv6_addr,
+    );
+}
+unsafe extern "C" {
+    #[doc = "Generate a multicast Ethernet address from a multicast IPv6 address as defined in RFC 2464, section 7.\n\nout param mac\nThe multicast Ethernet address to generate.\nin param ip\nA multicast IPv6 address."]
+    pub fn deepeedeekay_rte_ether_mcast_from_ipv6(
+        mac: *mut rte_ether_addr,
+        ip: *const rte_ipv6_addr,
+    );
+}
+unsafe extern "C" {
+    #[doc = "Check that the IPv6 header version field is valid according to RFC 8200 section 3.\n\nin param ip\nThe IPv6 header.\nreturn\nif the version field is valid.  otherwise."]
+    pub fn deepeedeekay_rte_ipv6_check_version(ip: *const rte_ipv6_hdr) -> ::std::os::raw::c_int;
 }
 unsafe extern "C" {
     #[doc = "Process the pseudo-header checksum of an IPv6 header.\nDepending on the ol_flags, the pseudo-header checksum expected by the drivers is not the same. For instance, when TSO is enabled, the IPv6 payload length must not be included in the packet.\nWhen ol_flags is 0, it computes the standard pseudo-header checksum.\n\nin param ipv6_hdr\nThe pointer to the contiguous IPv6 header.\nin param ol_flags\nThe ol_flags of the associated mbuf.\nreturn\nThe non-complemented checksum to set in the L4 header."]

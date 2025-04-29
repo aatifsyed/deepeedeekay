@@ -218,9 +218,12 @@ unsigned int  deepeedeekay_rte_ring_dequeue_burst(struct rte_ring * r, void ** o
 size_t  deepeedeekay_rte_strlcpy(char * dst, const char * src, size_t size) { return rte_strlcpy(dst, src, size); }
 size_t  deepeedeekay_rte_strlcat(char * dst, const char * src, size_t size) { return rte_strlcat(dst, src, size); }
 const char * deepeedeekay_rte_str_skip_leading_spaces(const char * src) { return rte_str_skip_leading_spaces(src); }
-void  deepeedeekay_rte_ethdev_trace_rx_burst(uint16_t port_id, uint16_t queue_id, void ** pkt_tbl, uint16_t nb_rx) { return rte_ethdev_trace_rx_burst(port_id, queue_id, pkt_tbl, nb_rx); }
+bool  deepeedeekay_rte_trace_feature_is_enabled() { return rte_trace_feature_is_enabled(); }
+void  deepeedeekay_rte_ethdev_trace_rx_burst_empty(uint16_t port_id, uint16_t queue_id, void ** pkt_tbl) { return rte_ethdev_trace_rx_burst_empty(port_id, queue_id, pkt_tbl); }
+void  deepeedeekay_rte_ethdev_trace_rx_burst_nonempty(uint16_t port_id, uint16_t queue_id, void ** pkt_tbl, uint16_t nb_rx) { return rte_ethdev_trace_rx_burst_nonempty(port_id, queue_id, pkt_tbl, nb_rx); }
 void  deepeedeekay_rte_ethdev_trace_tx_burst(uint16_t port_id, uint16_t queue_id, void ** pkts_tbl, uint16_t nb_pkts) { return rte_ethdev_trace_tx_burst(port_id, queue_id, pkts_tbl, nb_pkts); }
-void  deepeedeekay_rte_eth_trace_call_rx_callbacks(uint16_t port_id, uint16_t queue_id, void ** rx_pkts, uint16_t nb_rx, uint16_t nb_pkts) { return rte_eth_trace_call_rx_callbacks(port_id, queue_id, rx_pkts, nb_rx, nb_pkts); }
+void  deepeedeekay_rte_eth_trace_call_rx_callbacks_empty(uint16_t port_id, uint16_t queue_id, void ** rx_pkts, uint16_t nb_pkts) { return rte_eth_trace_call_rx_callbacks_empty(port_id, queue_id, rx_pkts, nb_pkts); }
+void  deepeedeekay_rte_eth_trace_call_rx_callbacks_nonempty(uint16_t port_id, uint16_t queue_id, void ** rx_pkts, uint16_t nb_rx, uint16_t nb_pkts) { return rte_eth_trace_call_rx_callbacks_nonempty(port_id, queue_id, rx_pkts, nb_rx, nb_pkts); }
 void  deepeedeekay_rte_eth_trace_call_tx_callbacks(uint16_t port_id, uint16_t queue_id, void ** tx_pkts, uint16_t nb_pkts) { return rte_eth_trace_call_tx_callbacks(port_id, queue_id, tx_pkts, nb_pkts); }
 void  deepeedeekay_rte_eth_trace_tx_buffer_drop_callback(void ** pkts, uint16_t unsent) { return rte_eth_trace_tx_buffer_drop_callback(pkts, unsent); }
 void  deepeedeekay_rte_eth_trace_tx_buffer_count_callback(void ** pkts, uint16_t unsent, uint64_t count) { return rte_eth_trace_tx_buffer_count_callback(pkts, unsent, count); }
@@ -348,15 +351,32 @@ int  deepeedeekay_rte_is_valid_assigned_ether_addr(const struct rte_ether_addr *
 void  deepeedeekay_rte_ether_addr_copy(const struct rte_ether_addr *restrict ea_from, struct rte_ether_addr *restrict ea_to) { return rte_ether_addr_copy(ea_from, ea_to); }
 int  deepeedeekay_rte_vlan_strip(struct rte_mbuf * m) { return rte_vlan_strip(m); }
 int  deepeedeekay_rte_vlan_insert(struct rte_mbuf ** m) { return rte_vlan_insert(m); }
-uint8_t  deepeedeekay_rte_ipv4_hdr_len(const struct rte_ipv4_hdr * ipv4_hdr) { return rte_ipv4_hdr_len(ipv4_hdr); }
 uint16_t  deepeedeekay_rte_raw_cksum(const void * buf, size_t len) { return rte_raw_cksum(buf, len); }
 int  deepeedeekay_rte_raw_cksum_mbuf(const struct rte_mbuf * m, uint32_t off, uint32_t len, uint16_t * cksum) { return rte_raw_cksum_mbuf(m, off, len, cksum); }
+uint8_t  deepeedeekay_rte_ipv4_hdr_len(const struct rte_ipv4_hdr * ipv4_hdr) { return rte_ipv4_hdr_len(ipv4_hdr); }
 uint16_t  deepeedeekay_rte_ipv4_cksum(const struct rte_ipv4_hdr * ipv4_hdr) { return rte_ipv4_cksum(ipv4_hdr); }
+uint16_t  deepeedeekay_rte_ipv4_cksum_simple(const struct rte_ipv4_hdr * ipv4_hdr) { return rte_ipv4_cksum_simple(ipv4_hdr); }
 uint16_t  deepeedeekay_rte_ipv4_phdr_cksum(const struct rte_ipv4_hdr * ipv4_hdr, uint64_t ol_flags) { return rte_ipv4_phdr_cksum(ipv4_hdr, ol_flags); }
 uint16_t  deepeedeekay_rte_ipv4_udptcp_cksum(const struct rte_ipv4_hdr * ipv4_hdr, const void * l4_hdr) { return rte_ipv4_udptcp_cksum(ipv4_hdr, l4_hdr); }
 uint16_t  deepeedeekay_rte_ipv4_udptcp_cksum_mbuf(const struct rte_mbuf * m, const struct rte_ipv4_hdr * ipv4_hdr, uint16_t l4_off) { return rte_ipv4_udptcp_cksum_mbuf(m, ipv4_hdr, l4_off); }
 int  deepeedeekay_rte_ipv4_udptcp_cksum_verify(const struct rte_ipv4_hdr * ipv4_hdr, const void * l4_hdr) { return rte_ipv4_udptcp_cksum_verify(ipv4_hdr, l4_hdr); }
 int  deepeedeekay_rte_ipv4_udptcp_cksum_mbuf_verify(const struct rte_mbuf * m, const struct rte_ipv4_hdr * ipv4_hdr, uint16_t l4_off) { return rte_ipv4_udptcp_cksum_mbuf_verify(m, ipv4_hdr, l4_off); }
+bool  deepeedeekay_rte_ipv6_addr_eq(const struct rte_ipv6_addr * a, const struct rte_ipv6_addr * b) { return rte_ipv6_addr_eq(a, b); }
+void  deepeedeekay_rte_ipv6_addr_mask(struct rte_ipv6_addr * ip, uint8_t depth) { return rte_ipv6_addr_mask(ip, depth); }
+bool  deepeedeekay_rte_ipv6_addr_eq_prefix(const struct rte_ipv6_addr * a, const struct rte_ipv6_addr * b, uint8_t depth) { return rte_ipv6_addr_eq_prefix(a, b, depth); }
+uint8_t  deepeedeekay_rte_ipv6_mask_depth(const struct rte_ipv6_addr * mask) { return rte_ipv6_mask_depth(mask); }
+bool  deepeedeekay_rte_ipv6_addr_is_unspec(const struct rte_ipv6_addr * ip) { return rte_ipv6_addr_is_unspec(ip); }
+bool  deepeedeekay_rte_ipv6_addr_is_loopback(const struct rte_ipv6_addr * ip) { return rte_ipv6_addr_is_loopback(ip); }
+bool  deepeedeekay_rte_ipv6_addr_is_linklocal(const struct rte_ipv6_addr * ip) { return rte_ipv6_addr_is_linklocal(ip); }
+bool  deepeedeekay_rte_ipv6_addr_is_sitelocal(const struct rte_ipv6_addr * ip) { return rte_ipv6_addr_is_sitelocal(ip); }
+bool  deepeedeekay_rte_ipv6_addr_is_v4compat(const struct rte_ipv6_addr * ip) { return rte_ipv6_addr_is_v4compat(ip); }
+bool  deepeedeekay_rte_ipv6_addr_is_v4mapped(const struct rte_ipv6_addr * ip) { return rte_ipv6_addr_is_v4mapped(ip); }
+bool  deepeedeekay_rte_ipv6_addr_is_mcast(const struct rte_ipv6_addr * ip) { return rte_ipv6_addr_is_mcast(ip); }
+enum rte_ipv6_mc_scope  deepeedeekay_rte_ipv6_mc_scope(const struct rte_ipv6_addr * ip) { return rte_ipv6_mc_scope(ip); }
+void  deepeedeekay_rte_ipv6_llocal_from_ethernet(struct rte_ipv6_addr * ip, const struct rte_ether_addr * mac) { return rte_ipv6_llocal_from_ethernet(ip, mac); }
+void  deepeedeekay_rte_ipv6_solnode_from_addr(struct rte_ipv6_addr * sol, const struct rte_ipv6_addr * ip) { return rte_ipv6_solnode_from_addr(sol, ip); }
+void  deepeedeekay_rte_ether_mcast_from_ipv6(struct rte_ether_addr * mac, const struct rte_ipv6_addr * ip) { return rte_ether_mcast_from_ipv6(mac, ip); }
+int  deepeedeekay_rte_ipv6_check_version(const struct rte_ipv6_hdr * ip) { return rte_ipv6_check_version(ip); }
 uint16_t  deepeedeekay_rte_ipv6_phdr_cksum(const struct rte_ipv6_hdr * ipv6_hdr, uint64_t ol_flags) { return rte_ipv6_phdr_cksum(ipv6_hdr, ol_flags); }
 uint16_t  deepeedeekay_rte_ipv6_udptcp_cksum(const struct rte_ipv6_hdr * ipv6_hdr, const void * l4_hdr) { return rte_ipv6_udptcp_cksum(ipv6_hdr, l4_hdr); }
 uint16_t  deepeedeekay_rte_ipv6_udptcp_cksum_mbuf(const struct rte_mbuf * m, const struct rte_ipv6_hdr * ipv6_hdr, uint16_t l4_off) { return rte_ipv6_udptcp_cksum_mbuf(m, ipv6_hdr, l4_off); }
