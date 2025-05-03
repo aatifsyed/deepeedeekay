@@ -9,6 +9,7 @@ use anyhow::{anyhow, bail, ensure, Context as _};
 #[allow(deprecated)]
 use bindgen::{Abi, CargoCallbacks};
 use itertools::Itertools as _;
+use lazy_regex::regex_captures;
 use serde::Deserialize;
 
 fn main() -> anyhow::Result<()> {
@@ -29,6 +30,23 @@ fn main() -> anyhow::Result<()> {
     let define_flags = defines
         .iter()
         .map(|(k, v)| format!("-D{k}={}", v.as_deref().unwrap_or_default()));
+
+    let mut flags = String::new();
+
+    let ethdev_h = include_paths
+        .iter()
+        .map(|it| it.join("rte_ethdev.h"))
+        .find(|it| it.exists())
+        .context("couldn't find rte_ethdev.h")?;
+    for line in fs::read_to_string(ethdev_h)?.lines() {
+        if let Some((_, var, n)) = regex_captures!(r"#define\s+(\w*)\s*RTE_BIT64\((\d+)\)", line) {
+            writeln!(flags, "pub const {var}: u64 = 1 << {n};")?
+        }
+    }
+    fs::write(
+        concat!(env!("CARGO_MANIFEST_DIR"), "/generated/flags.rs"),
+        flags,
+    )?;
 
     let shim_h_path = concat!(env!("CARGO_MANIFEST_DIR"), "/shim.h");
     let shim_c_path = concat!(env!("CARGO_MANIFEST_DIR"), "/shim.c");
@@ -118,6 +136,9 @@ fn main() -> anyhow::Result<()> {
             cargo: CargoCallbacks::new(),
             derives: vec![],
         }))
+        .rustified_enum("rte_devtype")
+        .rustified_enum("rte_eth_err_handle_mode")
+        .rustified_enum("rte_dev_policy")
         .generate()
         .context("couldn't generate bindings")?
         .write_to_file(bindings_path)

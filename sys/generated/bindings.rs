@@ -1283,10 +1283,13 @@ pub type rte_dev_event_cb_fn = ::std::option::Option<
         cb_arg: *mut ::std::os::raw::c_void,
     ),
 >;
-pub const rte_dev_policy_RTE_DEV_ALLOWED: rte_dev_policy = 0;
-pub const rte_dev_policy_RTE_DEV_BLOCKED: rte_dev_policy = 1;
+#[repr(u32)]
 #[doc = " Device policies."]
-pub type rte_dev_policy = ::std::os::raw::c_uint;
+#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+pub enum rte_dev_policy {
+    RTE_DEV_ALLOWED = 0,
+    RTE_DEV_BLOCKED = 1,
+}
 unsafe extern "C" {
     #[doc = " Retrieve a driver name.\n\n @param driver\n   A pointer to a driver structure.\n @return\n   A pointer to the driver name string."]
     pub fn rte_driver_name(driver: *const rte_driver) -> *const ::std::os::raw::c_char;
@@ -3969,11 +3972,14 @@ unsafe extern "C" {
         windows_handle: *mut ::std::os::raw::c_void,
     ) -> ::std::os::raw::c_int;
 }
-pub const rte_devtype_RTE_DEVTYPE_ALLOWED: rte_devtype = 0;
-pub const rte_devtype_RTE_DEVTYPE_BLOCKED: rte_devtype = 1;
-pub const rte_devtype_RTE_DEVTYPE_VIRTUAL: rte_devtype = 2;
+#[repr(u32)]
 #[doc = " Type of generic device"]
-pub type rte_devtype = ::std::os::raw::c_uint;
+#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+pub enum rte_devtype {
+    RTE_DEVTYPE_ALLOWED = 0,
+    RTE_DEVTYPE_BLOCKED = 1,
+    RTE_DEVTYPE_VIRTUAL = 2,
+}
 #[doc = " Structure that stores a device given by the user with its arguments\n\n A user device is a physical or a virtual device given by the user to\n the DPDK application at startup through command line arguments.\n\n The structure stores the configuration of the device, its PCI\n identifier if it's a PCI device or the driver name if it's a virtual\n device."]
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -11427,14 +11433,17 @@ pub const rte_eth_representor_type_RTE_ETH_REPRESENTOR_SF: rte_eth_representor_t
 pub const rte_eth_representor_type_RTE_ETH_REPRESENTOR_PF: rte_eth_representor_type = 3;
 #[doc = " Ethernet device representor port type."]
 pub type rte_eth_representor_type = ::std::os::raw::c_uint;
-#[doc = " No error handling modes are supported."]
-pub const rte_eth_err_handle_mode_RTE_ETH_ERROR_HANDLE_MODE_NONE: rte_eth_err_handle_mode = 0;
-#[doc = " Passive error handling, after the PMD detects that a reset is required,\n the PMD reports @see RTE_ETH_EVENT_INTR_RESET event,\n and the application invokes @see rte_eth_dev_reset to recover the port."]
-pub const rte_eth_err_handle_mode_RTE_ETH_ERROR_HANDLE_MODE_PASSIVE: rte_eth_err_handle_mode = 1;
-#[doc = " Proactive error handling, after the PMD detects that a reset is required,\n the PMD reports @see RTE_ETH_EVENT_ERR_RECOVERING event,\n do recovery internally, and finally reports the recovery result event\n (@see RTE_ETH_EVENT_RECOVERY_*)."]
-pub const rte_eth_err_handle_mode_RTE_ETH_ERROR_HANDLE_MODE_PROACTIVE: rte_eth_err_handle_mode = 2;
+#[repr(u32)]
 #[doc = " @warning\n @b EXPERIMENTAL: this enumeration may change without prior notice.\n\n Ethernet device error handling mode."]
-pub type rte_eth_err_handle_mode = ::std::os::raw::c_uint;
+#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+pub enum rte_eth_err_handle_mode {
+    #[doc = " No error handling modes are supported."]
+    RTE_ETH_ERROR_HANDLE_MODE_NONE = 0,
+    #[doc = " Passive error handling, after the PMD detects that a reset is required,\n the PMD reports @see RTE_ETH_EVENT_INTR_RESET event,\n and the application invokes @see rte_eth_dev_reset to recover the port."]
+    RTE_ETH_ERROR_HANDLE_MODE_PASSIVE = 1,
+    #[doc = " Proactive error handling, after the PMD detects that a reset is required,\n the PMD reports @see RTE_ETH_EVENT_ERR_RECOVERING event,\n do recovery internally, and finally reports the recovery result event\n (@see RTE_ETH_EVENT_RECOVERY_*)."]
+    RTE_ETH_ERROR_HANDLE_MODE_PROACTIVE = 2,
+}
 #[doc = " A structure used to retrieve the contextual information of\n an Ethernet device, such as the controlling driver of the\n device, etc..."]
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]

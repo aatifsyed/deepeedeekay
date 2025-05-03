@@ -12,6 +12,11 @@ use core::fmt;
 
 pub use bindings::*;
 
+#[path = "../generated/flags.rs"]
+mod flags;
+
+pub use flags::*;
+
 include!("../generated/renames.rs");
 
 pub use bindings::{
