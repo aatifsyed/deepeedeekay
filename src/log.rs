@@ -3,7 +3,7 @@ use core::{
     fmt::{self, Write as _},
 };
 
-use crate::{sys, util::SeeString};
+use crate::sys;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[repr(u32)]
@@ -34,7 +34,7 @@ pub enum Type {
 #[inline]
 pub fn log(loglevel: Level, logtype: Type, args: fmt::Arguments<'_>) {
     std::thread_local! {
-        static BUF: RefCell<SeeString> = const { RefCell::new(SeeString::new()) };
+        static BUF: RefCell<seasick::WriteBuffer> = const { RefCell::new(seasick::WriteBuffer::new()) };
     }
     if !unsafe { sys::rte_log_can_log(logtype as u32, loglevel as u32) } {
         return;
@@ -57,7 +57,7 @@ pub fn log(loglevel: Level, logtype: Type, args: fmt::Arguments<'_>) {
                     loglevel as u32,
                     logtype as u32,
                     c"%s\n".as_ptr(),
-                    buf.as_cstr(),
+                    buf.as_cstr().as_ptr(),
                 )
                 .is_negative()
                 {

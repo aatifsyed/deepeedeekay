@@ -4628,34 +4628,40 @@ const _: () = {
     ["Offset of field: rte_eth_thresh::wthresh"]
         [::std::mem::offset_of!(rte_eth_thresh, wthresh) - 2usize];
 };
-#[doc = " None of DCB, RSS or VMDq mode"]
-pub const rte_eth_rx_mq_mode_RTE_ETH_MQ_RX_NONE: rte_eth_rx_mq_mode = 0;
-#[doc = " For Rx side, only RSS is on"]
-pub const rte_eth_rx_mq_mode_RTE_ETH_MQ_RX_RSS: rte_eth_rx_mq_mode = 1;
-#[doc = " For Rx side,only DCB is on."]
-pub const rte_eth_rx_mq_mode_RTE_ETH_MQ_RX_DCB: rte_eth_rx_mq_mode = 2;
-#[doc = " Both DCB and RSS enable"]
-pub const rte_eth_rx_mq_mode_RTE_ETH_MQ_RX_DCB_RSS: rte_eth_rx_mq_mode = 3;
-#[doc = " Only VMDq, no RSS nor DCB"]
-pub const rte_eth_rx_mq_mode_RTE_ETH_MQ_RX_VMDQ_ONLY: rte_eth_rx_mq_mode = 4;
-#[doc = " RSS mode with VMDq"]
-pub const rte_eth_rx_mq_mode_RTE_ETH_MQ_RX_VMDQ_RSS: rte_eth_rx_mq_mode = 5;
-#[doc = " Use VMDq+DCB to route traffic to queues"]
-pub const rte_eth_rx_mq_mode_RTE_ETH_MQ_RX_VMDQ_DCB: rte_eth_rx_mq_mode = 6;
-#[doc = " Enable both VMDq and DCB in VMDq"]
-pub const rte_eth_rx_mq_mode_RTE_ETH_MQ_RX_VMDQ_DCB_RSS: rte_eth_rx_mq_mode = 7;
+#[repr(u32)]
 #[doc = "  A set of values to identify what method is to be used to route\n  packets to multiple queues."]
-pub type rte_eth_rx_mq_mode = ::std::os::raw::c_uint;
-#[doc = "< It is in neither DCB nor VT mode."]
-pub const rte_eth_tx_mq_mode_RTE_ETH_MQ_TX_NONE: rte_eth_tx_mq_mode = 0;
-#[doc = "< For Tx side,only DCB is on."]
-pub const rte_eth_tx_mq_mode_RTE_ETH_MQ_TX_DCB: rte_eth_tx_mq_mode = 1;
-#[doc = "< For Tx side,both DCB and VT is on."]
-pub const rte_eth_tx_mq_mode_RTE_ETH_MQ_TX_VMDQ_DCB: rte_eth_tx_mq_mode = 2;
-#[doc = "< Only VT on, no DCB"]
-pub const rte_eth_tx_mq_mode_RTE_ETH_MQ_TX_VMDQ_ONLY: rte_eth_tx_mq_mode = 3;
+#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+pub enum rte_eth_rx_mq_mode {
+    #[doc = " None of DCB, RSS or VMDq mode"]
+    RTE_ETH_MQ_RX_NONE = 0,
+    #[doc = " For Rx side, only RSS is on"]
+    RTE_ETH_MQ_RX_RSS = 1,
+    #[doc = " For Rx side,only DCB is on."]
+    RTE_ETH_MQ_RX_DCB = 2,
+    #[doc = " Both DCB and RSS enable"]
+    RTE_ETH_MQ_RX_DCB_RSS = 3,
+    #[doc = " Only VMDq, no RSS nor DCB"]
+    RTE_ETH_MQ_RX_VMDQ_ONLY = 4,
+    #[doc = " RSS mode with VMDq"]
+    RTE_ETH_MQ_RX_VMDQ_RSS = 5,
+    #[doc = " Use VMDq+DCB to route traffic to queues"]
+    RTE_ETH_MQ_RX_VMDQ_DCB = 6,
+    #[doc = " Enable both VMDq and DCB in VMDq"]
+    RTE_ETH_MQ_RX_VMDQ_DCB_RSS = 7,
+}
+#[repr(u32)]
 #[doc = " A set of values to identify what method is to be used to transmit\n packets using multi-TCs."]
-pub type rte_eth_tx_mq_mode = ::std::os::raw::c_uint;
+#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+pub enum rte_eth_tx_mq_mode {
+    #[doc = "< It is in neither DCB nor VT mode."]
+    RTE_ETH_MQ_TX_NONE = 0,
+    #[doc = "< For Tx side,only DCB is on."]
+    RTE_ETH_MQ_TX_DCB = 1,
+    #[doc = "< For Tx side,both DCB and VT is on."]
+    RTE_ETH_MQ_TX_VMDQ_DCB = 2,
+    #[doc = "< Only VT on, no DCB"]
+    RTE_ETH_MQ_TX_VMDQ_ONLY = 3,
+}
 #[doc = " A structure used to configure the Rx features of an Ethernet port."]
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -4697,21 +4703,23 @@ pub const rte_vlan_type_RTE_ETH_VLAN_TYPE_OUTER: rte_vlan_type = 2;
 pub const rte_vlan_type_RTE_ETH_VLAN_TYPE_MAX: rte_vlan_type = 3;
 #[doc = " VLAN types to indicate if it is for single VLAN, inner VLAN or outer VLAN.\n Note that single VLAN is treated the same as inner VLAN."]
 pub type rte_vlan_type = ::std::os::raw::c_uint;
-#[doc = " DEFAULT means driver decides which hash algorithm to pick."]
-pub const rte_eth_hash_function_RTE_ETH_HASH_FUNCTION_DEFAULT: rte_eth_hash_function = 0;
-#[doc = "< Toeplitz"]
-pub const rte_eth_hash_function_RTE_ETH_HASH_FUNCTION_TOEPLITZ: rte_eth_hash_function = 1;
-#[doc = "< Simple XOR"]
-pub const rte_eth_hash_function_RTE_ETH_HASH_FUNCTION_SIMPLE_XOR: rte_eth_hash_function = 2;
-#[doc = " Symmetric Toeplitz: src, dst will be replaced by\n xor(src, dst). For the case with src/dst only,\n src or dst address will xor with zero pair."]
-pub const rte_eth_hash_function_RTE_ETH_HASH_FUNCTION_SYMMETRIC_TOEPLITZ: rte_eth_hash_function = 3;
-#[doc = " Symmetric Toeplitz: L3 and L4 fields are sorted prior to\n the hash function.\n  If src_ip > dst_ip, swap src_ip and dst_ip.\n  If src_port > dst_port, swap src_port and dst_port."]
-pub const rte_eth_hash_function_RTE_ETH_HASH_FUNCTION_SYMMETRIC_TOEPLITZ_SORT:
-    rte_eth_hash_function = 4;
-#[doc = " Symmetric Toeplitz: L3 and L4 fields are sorted prior to\n the hash function.\n  If src_ip > dst_ip, swap src_ip and dst_ip.\n  If src_port > dst_port, swap src_port and dst_port."]
-pub const rte_eth_hash_function_RTE_ETH_HASH_FUNCTION_MAX: rte_eth_hash_function = 5;
+#[repr(u32)]
 #[doc = " Hash function types."]
-pub type rte_eth_hash_function = ::std::os::raw::c_uint;
+#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+pub enum rte_eth_hash_function {
+    #[doc = " DEFAULT means driver decides which hash algorithm to pick."]
+    RTE_ETH_HASH_FUNCTION_DEFAULT = 0,
+    #[doc = "< Toeplitz"]
+    RTE_ETH_HASH_FUNCTION_TOEPLITZ = 1,
+    #[doc = "< Simple XOR"]
+    RTE_ETH_HASH_FUNCTION_SIMPLE_XOR = 2,
+    #[doc = " Symmetric Toeplitz: src, dst will be replaced by\n xor(src, dst). For the case with src/dst only,\n src or dst address will xor with zero pair."]
+    RTE_ETH_HASH_FUNCTION_SYMMETRIC_TOEPLITZ = 3,
+    #[doc = " Symmetric Toeplitz: L3 and L4 fields are sorted prior to\n the hash function.\n  If src_ip > dst_ip, swap src_ip and dst_ip.\n  If src_port > dst_port, swap src_port and dst_port."]
+    RTE_ETH_HASH_FUNCTION_SYMMETRIC_TOEPLITZ_SORT = 4,
+    #[doc = " Symmetric Toeplitz: L3 and L4 fields are sorted prior to\n the hash function.\n  If src_ip > dst_ip, swap src_ip and dst_ip.\n  If src_port > dst_port, swap src_port and dst_port."]
+    RTE_ETH_HASH_FUNCTION_MAX = 5,
+}
 #[doc = " A structure used to configure the Receive Side Scaling (RSS) feature\n of an Ethernet port."]
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]

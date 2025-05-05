@@ -42,6 +42,9 @@ fn main() -> anyhow::Result<()> {
         if let Some((_, var, n)) = regex_captures!(r"#define\s+(\w*)\s*RTE_BIT64\((\d+)\)", line) {
             writeln!(flags, "pub const {var}: u64 = 1 << {n};")?
         }
+        if let Some((_, var, n)) = regex_captures!(r"#define\s+(\w*)\s*RTE_BIT32\((\d+)\)", line) {
+            writeln!(flags, "pub const {var}: u32 = 1 << {n};")?
+        }
     }
     fs::write(
         concat!(env!("CARGO_MANIFEST_DIR"), "/generated/flags.rs"),
@@ -139,6 +142,9 @@ fn main() -> anyhow::Result<()> {
         .rustified_enum("rte_devtype")
         .rustified_enum("rte_eth_err_handle_mode")
         .rustified_enum("rte_dev_policy")
+        .rustified_enum("rte_eth_tx_mq_mode")
+        .rustified_enum("rte_eth_hash_function")
+        .rustified_enum("rte_eth_rx_mq_mode")
         .generate()
         .context("couldn't generate bindings")?
         .write_to_file(bindings_path)

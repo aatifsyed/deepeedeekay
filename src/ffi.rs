@@ -13,7 +13,7 @@ pub fn clear() {
     }
 }
 
-pub type Result<T, E = Error> = core::result::Result<T, E>;
+pub type Result<T> = core::result::Result<T, Error>;
 
 /// Error making an FFI call.
 #[derive(Debug)]
@@ -38,6 +38,20 @@ impl From<Error> for Call<'static> {
 }
 
 impl core::error::Error for Error {}
+
+/// Will allocate
+impl From<Error> for io::Error {
+    fn from(value: Error) -> Self {
+        match (
+            io::Error::from_raw_os_error(value.0.rte_errno).kind(),
+            io::Error::from_raw_os_error(value.0.errno).kind(),
+        ) {
+            (kind @ io::ErrorKind::Other, io::ErrorKind::Other)
+            | (kind, io::ErrorKind::Other)
+            | (_, kind) => io::Error::new(kind, value),
+        }
+    }
+}
 
 /// Record of an FFI call.
 #[derive(Debug)]

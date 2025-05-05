@@ -141,9 +141,10 @@ pub enum Allocator {
     Malloc,
 }
 
+#[derive(Debug)]
 pub struct MainCore<'rt> {
-    _unsend: PhantomUnsend,
     rt: &'rt Runtime,
+    _unsend: PhantomUnsend,
 }
 
 impl<'rt> MainCore<'rt> {
@@ -156,6 +157,28 @@ impl<'rt> MainCore<'rt> {
 }
 
 impl Deref for MainCore<'_> {
+    type Target = Runtime;
+    fn deref(&self) -> &Self::Target {
+        self.rt
+    }
+}
+
+#[derive(Debug)]
+pub struct WorkerCore<'rt> {
+    rt: &'rt Runtime,
+    _unsend: PhantomUnsend,
+}
+
+impl<'rt> WorkerCore<'rt> {
+    pub const unsafe fn new(rt: &'rt Runtime) -> Self {
+        Self {
+            _unsend: PhantomUnsend::new(),
+            rt,
+        }
+    }
+}
+
+impl Deref for WorkerCore<'_> {
     type Target = Runtime;
     fn deref(&self) -> &Self::Target {
         self.rt

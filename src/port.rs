@@ -1,17 +1,25 @@
 //! Packet data enters and exits the application through ports.
 
-use core::{fmt, marker::PhantomData, mem, ptr};
+use core::{
+    ffi::{CStr, c_char, c_int, c_uint},
+    fmt,
+    marker::PhantomData,
+    mem,
+    ptr::{self, NonNull},
+};
 
 use crate::{
     call, ffi, pkt,
     rt::Runtime,
     sys,
-    util::{WithError, bstr_till_nul, cstr, neg, to_bool},
+    util::{WithError, cstr, neg, to_bool},
 };
 
 use alloc::vec::Vec;
+use bitbag::{BitBag, BitOr, Flags};
+use seasick::{SeaArray, SeaStr, TransmuteFrom};
 
-/// A live port in the EAL.
+/// A port in the EAL.
 #[repr(transparent)]
 pub struct Raw<'rt> {
     id: u16,
@@ -22,175 +30,281 @@ impl fmt::Debug for Raw<'_> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let mut f = f.debug_struct("Port");
         f.field("id", &self.id);
-        if let Some(info) = self.info() {
-            f.field("info", &Fmt(info));
+        match self.info() {
+            Some(ref it) => f.field("info", it).finish(),
+            None => f.finish_non_exhaustive(),
         }
-        f.finish_non_exhaustive()
     }
 }
 
-struct Fmt<T>(T);
+#[derive(derive_more::Debug, TransmuteFrom)]
+#[repr(C)]
+#[transmute(from = sys::rte_eth_dev_info, strict)]
+pub struct DeviceInfo<'rt> {
+    #[transmute(*mut sys::rte_device)]
+    pub device: Option<DeviceHandle<'rt>>,
 
-impl fmt::Debug for Fmt<sys::rte_eth_dev_info> {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        #[expect(unused_variables)]
-        let sys::rte_eth_dev_info {
-            device,
-            driver_name,
-            if_index,
-            min_mtu,
-            max_mtu,
-            dev_flags,
-            min_rx_bufsize,
-            max_rx_bufsize,
-            max_rx_pktlen,
-            max_lro_pkt_size,
-            max_rx_queues,
-            max_tx_queues,
-            max_mac_addrs,
-            max_hash_mac_addrs,
-            max_vfs,
-            max_vmdq_pools,
-            rx_seg_capa,
-            rx_offload_capa,
-            tx_offload_capa,
-            rx_queue_offload_capa,
-            tx_queue_offload_capa,
-            reta_size,
-            hash_key_size,
-            rss_algo_capa,
-            flow_type_rss_offloads,
-            default_rxconf,
-            default_txconf,
-            vmdq_queue_base,
-            vmdq_queue_num,
-            vmdq_pool_base,
-            rx_desc_lim,
-            tx_desc_lim,
-            speed_capa,
-            nb_rx_queues,
-            nb_tx_queues,
-            max_rx_mempools,
-            default_rxportconf,
-            default_txportconf,
-            dev_capa,
-            switch_info,
-            err_handle_mode,
-            reserved_64s,
-            reserved_ptrs,
-        } = self.0;
-        let mut f = f.debug_struct("rte_eth_dev_info");
-        if let Some(ref it) = unsafe { cstr(driver_name) } {
-            f.field("driver_name", it);
-        }
-        if let Some(it) = unsafe { device.as_ref() } {
-            f.field("device", &Fmt(it));
-        }
+    #[transmute(*const c_char)]
+    pub driver_name: Option<&'rt SeaStr>,
 
-        f.field("switch_info", &Fmt(switch_info));
+    pub if_index: c_uint,
+    pub min_mtu: u16,
+    pub max_mtu: u16,
+    #[transmute(*const u32)]
+    pub dev_flags: &'rt BitBag<DeviceFlags>,
+    pub min_rx_bufsize: u32,
+    pub max_rx_bufsize: u32,
+    pub max_rx_pktlen: u32,
+    pub max_lro_pkt_size: u32,
+    pub max_rx_queues: u16,
+    pub max_tx_queues: u16,
+    pub max_mac_addrs: u32,
+    pub max_hash_mac_addrs: u32,
+    pub max_vfs: u16,
+    pub max_vmdq_pools: u16,
+    pub rx_seg_capa: sys::rte_eth_rxseg_capa,
+    #[transmute(u64)]
+    pub rx_offload_capa: BitBag<RxOffloadFlags>,
+    #[transmute(u64)]
+    pub tx_offload_capa: BitBag<TxOffloadFlags>,
+    #[transmute(u64)]
+    pub rx_queue_offload_capa: BitBag<RxOffloadFlags>,
+    #[transmute(u64)]
+    pub tx_queue_offload_capa: BitBag<TxOffloadFlags>,
+    pub reta_size: u16,
+    pub hash_key_size: u8,
+    #[transmute(u32)]
+    pub rss_algo_capa: BitBag<RssAlgoFlags>,
+    // TODO: flags
+    pub flow_type_rss_offloads: u64,
+    pub default_rxconf: sys::rte_eth_rxconf,
+    pub default_txconf: sys::rte_eth_txconf,
+    pub vmdq_queue_base: u16,
+    pub vmdq_queue_num: u16,
+    pub vmdq_pool_base: u16,
+    pub rx_desc_lim: sys::rte_eth_desc_lim,
+    pub tx_desc_lim: sys::rte_eth_desc_lim,
+    #[transmute(u32)]
+    pub speed_capa: BitBag<LinkSpeedFlags>,
+    pub nb_rx_queues: u16,
+    pub nb_tx_queues: u16,
+    pub max_rx_mempools: u16,
+    pub default_rxportconf: sys::rte_eth_dev_portconf,
+    pub default_txportconf: sys::rte_eth_dev_portconf,
+    #[transmute(u64)]
+    pub dev_capa: BitBag<DevCapabilityFlags>,
 
-        f.finish_non_exhaustive()
-    }
+    #[transmute(sys::rte_eth_switch_info)]
+    pub switch_info: SwitchInfo<'rt>,
+
+    pub err_handle_mode: sys::rte_eth_err_handle_mode,
+    #[debug(skip)]
+    reserved_64s: [u64; 2usize],
+    #[debug(skip)]
+    reserved_ptrs: [*mut ::std::os::raw::c_void; 2usize],
 }
 
-impl fmt::Debug for Fmt<&sys::rte_device> {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let mut f = f.debug_struct("rte_device");
-        let this = self.0;
-        if let Some(ref it) = unsafe { cstr(sys::rte_dev_name(this)) } {
-            f.field("name", it);
-        }
-        if let Some(ref it) = unsafe { cstr(sys::rte_dev_bus_info(this)) } {
-            f.field("bus_info", it);
-        }
-        if let Some(it) = unsafe { sys::rte_dev_devargs(this).as_ref() } {
-            f.field("devargs", &Fmt(it));
-        }
-        f.field(
-            "is_probed",
-            &to_bool(unsafe { sys::rte_dev_is_probed(this) }).unwrap(),
-        )
-        .field("numa_node", &unsafe { sys::rte_dev_numa_node(this) })
-        .finish_non_exhaustive()
-    }
+#[derive(BitOr, Flags, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[repr(u32)]
+pub enum DeviceFlags {
+    FlowOpsThreadSafe = sys::RTE_ETH_DEV_FLOW_OPS_THREAD_SAFE,
+    IntrLsc = sys::RTE_ETH_DEV_INTR_LSC,
+    BondingMember = sys::RTE_ETH_DEV_BONDING_MEMBER,
+    IntrRmv = sys::RTE_ETH_DEV_INTR_RMV,
+    Representor = sys::RTE_ETH_DEV_REPRESENTOR,
+    NoliveMacAddr = sys::RTE_ETH_DEV_NOLIVE_MAC_ADDR,
+    AutofillQueueXstats = sys::RTE_ETH_DEV_AUTOFILL_QUEUE_XSTATS,
 }
 
-impl fmt::Debug for Fmt<sys::rte_eth_switch_info> {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let sys::rte_eth_switch_info {
-            name,
-            domain_id,
-            port_id,
-            rx_domain,
-        } = self.0;
-        let mut f = f.debug_struct("rte_eth_switch_info");
-        if let Some(ref it) = unsafe { cstr(name) } {
-            f.field("name", it);
-        }
-        for (name, value) in [
-            ("domain_id", domain_id),
-            ("port_id", port_id),
-            ("rx_domain", rx_domain),
-        ] {
-            if value != 0 {
-                f.field(name, &value);
+#[derive(BitOr, Flags, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[repr(u64)]
+pub enum RxOffloadFlags {
+    VlanStrip = sys::RTE_ETH_RX_OFFLOAD_VLAN_STRIP,
+    Ipv4Cksum = sys::RTE_ETH_RX_OFFLOAD_IPV4_CKSUM,
+    UdpCksum = sys::RTE_ETH_RX_OFFLOAD_UDP_CKSUM,
+    TcpCksum = sys::RTE_ETH_RX_OFFLOAD_TCP_CKSUM,
+    TcpLro = sys::RTE_ETH_RX_OFFLOAD_TCP_LRO,
+    QinqStrip = sys::RTE_ETH_RX_OFFLOAD_QINQ_STRIP,
+    OuterIpv4Cksum = sys::RTE_ETH_RX_OFFLOAD_OUTER_IPV4_CKSUM,
+    MacsecStrip = sys::RTE_ETH_RX_OFFLOAD_MACSEC_STRIP,
+    VlanFilter = sys::RTE_ETH_RX_OFFLOAD_VLAN_FILTER,
+    VlanExtend = sys::RTE_ETH_RX_OFFLOAD_VLAN_EXTEND,
+    Scatter = sys::RTE_ETH_RX_OFFLOAD_SCATTER,
+    Timestamp = sys::RTE_ETH_RX_OFFLOAD_TIMESTAMP,
+    Security = sys::RTE_ETH_RX_OFFLOAD_SECURITY,
+    KeepCrc = sys::RTE_ETH_RX_OFFLOAD_KEEP_CRC,
+    SctpCksum = sys::RTE_ETH_RX_OFFLOAD_SCTP_CKSUM,
+    OuterUdpCksum = sys::RTE_ETH_RX_OFFLOAD_OUTER_UDP_CKSUM,
+    RssHash = sys::RTE_ETH_RX_OFFLOAD_RSS_HASH,
+    BufferSplit = sys::RTE_ETH_RX_OFFLOAD_BUFFER_SPLIT,
+}
+
+#[derive(BitOr, Flags, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[repr(u64)]
+pub enum TxOffloadFlags {
+    VlanInsert = sys::RTE_ETH_TX_OFFLOAD_VLAN_INSERT,
+    Ipv4Cksum = sys::RTE_ETH_TX_OFFLOAD_IPV4_CKSUM,
+    UdpCksum = sys::RTE_ETH_TX_OFFLOAD_UDP_CKSUM,
+    TcpCksum = sys::RTE_ETH_TX_OFFLOAD_TCP_CKSUM,
+    SctpCksum = sys::RTE_ETH_TX_OFFLOAD_SCTP_CKSUM,
+    TcpTso = sys::RTE_ETH_TX_OFFLOAD_TCP_TSO,
+    UdpTso = sys::RTE_ETH_TX_OFFLOAD_UDP_TSO,
+    OuterIpv4Cksum = sys::RTE_ETH_TX_OFFLOAD_OUTER_IPV4_CKSUM,
+    QinqInsert = sys::RTE_ETH_TX_OFFLOAD_QINQ_INSERT,
+    VxlanTnlTso = sys::RTE_ETH_TX_OFFLOAD_VXLAN_TNL_TSO,
+    GreTnlTso = sys::RTE_ETH_TX_OFFLOAD_GRE_TNL_TSO,
+    IpipTnlTso = sys::RTE_ETH_TX_OFFLOAD_IPIP_TNL_TSO,
+    GeneveTnlTso = sys::RTE_ETH_TX_OFFLOAD_GENEVE_TNL_TSO,
+    MacsecInsert = sys::RTE_ETH_TX_OFFLOAD_MACSEC_INSERT,
+    MtLockfree = sys::RTE_ETH_TX_OFFLOAD_MT_LOCKFREE,
+    MultiSegs = sys::RTE_ETH_TX_OFFLOAD_MULTI_SEGS,
+    MbufFastFree = sys::RTE_ETH_TX_OFFLOAD_MBUF_FAST_FREE,
+    Security = sys::RTE_ETH_TX_OFFLOAD_SECURITY,
+    UdpTnlTso = sys::RTE_ETH_TX_OFFLOAD_UDP_TNL_TSO,
+    IpTnlTso = sys::RTE_ETH_TX_OFFLOAD_IP_TNL_TSO,
+    OuterUdpCksum = sys::RTE_ETH_TX_OFFLOAD_OUTER_UDP_CKSUM,
+    SendOnTimestamp = sys::RTE_ETH_TX_OFFLOAD_SEND_ON_TIMESTAMP,
+}
+
+#[derive(BitOr, Flags, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[repr(u32)]
+pub enum RssAlgoFlags {
+    Default = 1 << sys::rte_eth_hash_function::RTE_ETH_HASH_FUNCTION_DEFAULT as u32,
+    Toeplitz = 1 << sys::rte_eth_hash_function::RTE_ETH_HASH_FUNCTION_TOEPLITZ as u32,
+    SimpleXor = 1 << sys::rte_eth_hash_function::RTE_ETH_HASH_FUNCTION_SIMPLE_XOR as u32,
+    SymmetricToeplitz =
+        1 << sys::rte_eth_hash_function::RTE_ETH_HASH_FUNCTION_SYMMETRIC_TOEPLITZ as u32,
+    SymmetricToeplitzSort =
+        1 << sys::rte_eth_hash_function::RTE_ETH_HASH_FUNCTION_SYMMETRIC_TOEPLITZ_SORT as u32,
+    Max = 1 << sys::rte_eth_hash_function::RTE_ETH_HASH_FUNCTION_MAX as u32,
+}
+
+#[derive(BitOr, Flags, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[repr(u32)]
+pub enum LinkSpeedFlags {
+    Fixed = sys::RTE_ETH_LINK_SPEED_FIXED,
+    _10MHd = sys::RTE_ETH_LINK_SPEED_10M_HD,
+    _10M = sys::RTE_ETH_LINK_SPEED_10M,
+    _100MHd = sys::RTE_ETH_LINK_SPEED_100M_HD,
+    _100M = sys::RTE_ETH_LINK_SPEED_100M,
+    _1G = sys::RTE_ETH_LINK_SPEED_1G,
+    _2_5G = sys::RTE_ETH_LINK_SPEED_2_5G,
+    _5G = sys::RTE_ETH_LINK_SPEED_5G,
+    _10G = sys::RTE_ETH_LINK_SPEED_10G,
+    _20G = sys::RTE_ETH_LINK_SPEED_20G,
+    _25G = sys::RTE_ETH_LINK_SPEED_25G,
+    _40G = sys::RTE_ETH_LINK_SPEED_40G,
+    _50G = sys::RTE_ETH_LINK_SPEED_50G,
+    _56G = sys::RTE_ETH_LINK_SPEED_56G,
+    _100G = sys::RTE_ETH_LINK_SPEED_100G,
+    _200G = sys::RTE_ETH_LINK_SPEED_200G,
+    _400G = sys::RTE_ETH_LINK_SPEED_400G,
+}
+
+#[derive(BitOr, Flags, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[repr(u64)]
+pub enum DevCapabilityFlags {
+    RuntimeRxQueueSetup = sys::RTE_ETH_DEV_CAPA_RUNTIME_RX_QUEUE_SETUP,
+    RuntimeTxQueueSetup = sys::RTE_ETH_DEV_CAPA_RUNTIME_TX_QUEUE_SETUP,
+    RxqShare = sys::RTE_ETH_DEV_CAPA_RXQ_SHARE,
+    FlowRuleKeep = sys::RTE_ETH_DEV_CAPA_FLOW_RULE_KEEP,
+    FlowSharedObjectKeep = sys::RTE_ETH_DEV_CAPA_FLOW_SHARED_OBJECT_KEEP,
+}
+
+#[repr(transparent)]
+pub struct DeviceHandle<'rt> {
+    ptr: NonNull<sys::rte_device>,
+    life: PhantomData<&'rt Runtime>,
+}
+
+impl<'rt> DeviceHandle<'rt> {
+    pub fn device(&self) -> Device<'rt> {
+        let dev = self.ptr.as_ptr();
+        unsafe {
+            Device {
+                name: cstr(sys::rte_dev_name(dev)),
+                bus_info: cstr(sys::rte_dev_bus_info(dev)),
+                devargs: NonNull::new(sys::rte_dev_devargs(dev).cast_mut())
+                    .map(|it| it.cast().as_ref()),
+                is_probed: to_bool(sys::rte_dev_is_probed(dev)).unwrap(),
+                numa_node: sys::rte_dev_numa_node(dev),
             }
         }
-        f.finish_non_exhaustive()
     }
 }
 
-impl fmt::Debug for Fmt<&sys::rte_devargs> {
+impl fmt::Debug for DeviceHandle<'_> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        #[expect(unused_variables)]
-        let sys::rte_devargs {
-            next: _,
-            type_,
-            policy,
-            name,
-            __bindgen_anon_1,
-            bus,
-            cls,
-            bus_str,
-            cls_str,
-            data,
-        } = *self.0;
+        self.device().fmt(f)
+    }
+}
 
-        #[derive(Debug)]
-        enum Policy {
-            Allowed,
-            Blocked,
-            #[expect(dead_code)]
-            Unknown(u32),
-        }
+#[derive(Debug)]
+pub struct Device<'rt> {
+    pub name: Option<&'rt CStr>,
+    pub bus_info: Option<&'rt CStr>,
+    pub devargs: Option<&'rt Devargs>,
+    pub is_probed: bool,
+    pub numa_node: c_int,
+}
 
-        impl From<u32> for Policy {
-            fn from(value: u32) -> Self {
-                match value {
-                    sys::rte_dev_policy_RTE_DEV_ALLOWED => Self::Allowed,
-                    sys::rte_dev_policy_RTE_DEV_BLOCKED => Self::Blocked,
-                    other => Self::Unknown(other),
-                }
-            }
-        }
+#[derive(Debug, TransmuteFrom)]
+#[repr(C)]
+#[transmute(from = sys::rte_eth_switch_info, strict)]
+pub struct SwitchInfo<'rt> {
+    #[transmute(*const c_char)]
+    pub name: Option<&'rt SeaStr>,
 
-        let mut f = f.debug_struct("rte_devargs");
-        f.field("name", &bstr_till_nul(&name))
-            .field("type", &type_)
-            .field("policy", &Policy::from(policy));
-        if let Some(ref it) = unsafe { cstr(bus_str) } {
-            f.field("bus_str", it);
-        }
-        if let Some(ref it) = unsafe { cstr(cls_str) } {
-            f.field("cls_str", it);
-        }
-        if let Some(ref it) = unsafe { cstr(__bindgen_anon_1.drv_str) } {
-            f.field("drv_str", it);
-        }
-        if let Some(ref it) = unsafe { cstr(data) } {
-            f.field("data", it);
-        }
-        f.finish_non_exhaustive()
+    pub domain_id: u16,
+    pub port_id: u16,
+    pub rx_domain: u16,
+}
+
+#[derive(derive_more::Debug, TransmuteFrom)]
+#[repr(C)]
+#[transmute(from = sys::rte_devargs, strict)]
+pub struct Devargs {
+    #[transmute(sys::rte_devargs__bindgen_ty_1)]
+    #[debug(skip)]
+    next: [*const Self; 2],
+
+    pub type_: sys::rte_devtype,
+    pub policy: sys::rte_dev_policy,
+
+    #[transmute([c_char; 64])]
+    pub name: SeaArray<64>,
+
+    /// Pointer into [`Self::data`]
+    #[transmute(__bindgen_anon_1: sys::rte_devargs__bindgen_ty_2)]
+    #[debug("{:?}", self.drv_str())]
+    drv_str: *const SeaStr,
+
+    bus: *mut sys::rte_bus,
+    cls: *mut sys::rte_class,
+
+    /// Pointer into [`Self::data`]
+    #[transmute(*const c_char)]
+    #[debug("{:?}", self.bus_str())]
+    bus_str: *const SeaStr,
+
+    /// Pointer into [`Self::data`]
+    #[transmute(*const c_char)]
+    #[debug("{:?}", self.cls_str())]
+    cls_str: *const SeaStr,
+
+    #[debug(skip)]
+    data: *mut c_char,
+}
+
+impl Devargs {
+    pub fn drv_str(&self) -> Option<&SeaStr> {
+        unsafe { self.drv_str.as_ref() }
+    }
+    pub fn bus_str(&self) -> Option<&SeaStr> {
+        unsafe { self.bus_str.as_ref() }
+    }
+    pub fn cls_str(&self) -> Option<&SeaStr> {
+        unsafe { self.cls_str.as_ref() }
     }
 }
 
@@ -206,14 +320,14 @@ impl<'rt> Raw<'rt> {
     pub fn raw(&self) -> u16 {
         self.id
     }
-    pub fn info(&self) -> Option<sys::rte_eth_dev_info> {
+    pub fn info(&self) -> Option<DeviceInfo<'rt>> {
         let mut info = unsafe { mem::zeroed() };
         let call;
         #[allow(clippy::wildcard_in_or_patterns)]
         match call!(
             sys::rte_eth_dev_info_get(self.id, &mut info) in call)
         {
-            0 => Some(info),
+            0 => Some(unsafe { mem::transmute::<sys::rte_eth_dev_info, DeviceInfo>(info) }),
             neg::ENOTSUP => None,
             neg::ENODEV => panic!("stale port id in {call}"),
             neg::EINVAL | _ => panic!("{call}"),
@@ -228,7 +342,7 @@ impl<'rt> Naive<'rt> {
     pub unsafe fn from_raw(port: Raw<'rt>) -> Self {
         Self(port)
     }
-    pub unsafe fn as_raw(&self) -> &Raw<'rt> {
+    pub fn raw(&self) -> &Raw<'rt> {
         &self.0
     }
     /// # Panics
@@ -246,8 +360,9 @@ impl<'rt> Naive<'rt> {
         let tx = tx.into_iter();
 
         let Self(raw) = self;
+        let conf = unsafe { mem::zeroed() };
         let mut call;
-        if call!(sys::rte_eth_dev_configure(raw.id, rx.len().try_into().unwrap(), tx.len().try_into().unwrap(), &mem::zeroed::<sys::rte_eth_conf>()) in call)
+        if call!(sys::rte_eth_dev_configure(raw.id, rx.len().try_into().unwrap(), tx.len().try_into().unwrap(), &conf) in call)
             != 0
         {
             return Err(WithError {
