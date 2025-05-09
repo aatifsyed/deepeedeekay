@@ -504,12 +504,16 @@ pub struct RxQueue<'port, 'pool, 'rt, T> {
 
 impl<'pool, T> RxQueue<'_, 'pool, '_, T> {
     /// Fill the [`spare_capacity`](Vec::spare_capacity_mut) of the `v` with packets from the port.
-    pub fn receive_into(&self, v: &mut Vec<pkt::Packet<'pool, T>>) {
+    ///
+    /// Returns the number of received packets
+    pub fn receive_into(&self, v: &mut Vec<pkt::Packet<'pool, T>>) -> usize {
         let fillme = v.spare_capacity_mut();
         let ptr = fillme.as_mut_ptr();
         let len = fillme.len().try_into().unwrap_or(u16::MAX);
         let additional = unsafe { sys::rte_eth_rx_burst(self.port, self.queue, ptr as _, len) };
-        unsafe { v.set_len(v.len() + usize::from(additional)) }
+        let additional = usize::from(additional);
+        unsafe { v.set_len(v.len() + additional) };
+        additional
     }
 }
 
@@ -522,11 +526,15 @@ pub struct TxQueue<'port, 'pool, 'rt, T> {
 
 impl<'pool, T> TxQueue<'_, 'pool, '_, T> {
     /// Send as many packets as possible from `v` to the port.
-    pub fn transmit_from(&self, v: &mut Vec<pkt::Packet<'pool, T>>) {
+    ///
+    /// Returns number of transmitted packets.
+    pub fn transmit_from(&self, v: &mut Vec<pkt::Packet<'pool, T>>) -> usize {
         let Self { port, queue, .. } = *self;
         let ptr = v.as_mut_ptr();
         let len = v.len().try_into().unwrap_or(u16::MAX);
         let sent = unsafe { sys::rte_eth_tx_burst(port, queue, ptr as _, len) };
-        v.drain(..usize::from(sent));
+        let sent = usize::from(sent);
+        v.drain(..sent);
+        sent
     }
 }
