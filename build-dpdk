@@ -17,10 +17,20 @@ tar --extract --file "$archive" --strip-components=1 --directory "$dpdk_src"
 venv=$workdir/.venv
 python3 -m venv "$venv"
 source "$venv/bin/activate"
-python3 -m pip install meson ninja pyelftools
+python3 -m pip install \
+    meson ninja pyelftools sphinx
 
 dpdk_build=$dpdk_src/build/
-meson setup -Dbuildtype=debug -Dexamples=skeleton --prefix="$prefix" --libdir=lib "$dpdk_src" "$dpdk_build"
+
+meson setup \
+    -Denable_docs=true \
+    -Dbuildtype=debug \
+    -Dexamples=skeleton \
+    --prefix="$prefix" \
+    --libdir=lib \
+    "$dpdk_src" \
+    "$dpdk_build"
+
 ninja -C "$dpdk_build"
 meson install -C "$dpdk_build"
 
