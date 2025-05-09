@@ -1,4 +1,4 @@
-//! Report errors over the FFI boundary with [`dpdk_sys`].
+//! Report errors over the FFI boundary with [`sys`].
 
 use crate::sys;
 use alloc::boxed::Box;
@@ -54,7 +54,6 @@ impl From<Error> for io::Error {
 }
 
 /// Record of an FFI call.
-#[derive(Debug)]
 pub struct Call<'a> {
     pub source: &'a Source<'a>,
     /// Debug-formatted arguments and return types.
@@ -62,6 +61,34 @@ pub struct Call<'a> {
     pub backtrace: std::backtrace::Backtrace,
     pub rte_errno: i32,
     pub errno: i32,
+}
+
+impl fmt::Debug for Call<'_> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("Call")
+            .field("source", &self.source)
+            .field("diags", &self.diags)
+            .field("backtrace", &self.backtrace)
+            .field(
+                "rte_errno",
+                &format_args!(
+                    "{} ({})",
+                    self.rte_errno,
+                    unsafe { CStr::from_ptr(sys::rte_strerror(self.rte_errno)) }
+                        .to_bytes()
+                        .escape_ascii(),
+                ),
+            )
+            .field(
+                "errno",
+                &format_args!(
+                    "{} ({})",
+                    self.errno,
+                    io::Error::from_raw_os_error(self.errno)
+                ),
+            )
+            .finish()
+    }
 }
 
 impl fmt::Display for Call<'_> {
