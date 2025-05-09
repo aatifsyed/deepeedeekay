@@ -145,6 +145,7 @@ fn main() -> anyhow::Result<()> {
         .rustified_enum("rte_eth_tx_mq_mode")
         .rustified_enum("rte_eth_hash_function")
         .rustified_enum("rte_eth_rx_mq_mode")
+        .rustified_enum("rte_lcore_state_t")
         .generate()
         .context("couldn't generate bindings")?
         .write_to_file(bindings_path)

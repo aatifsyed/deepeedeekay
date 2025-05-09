@@ -1755,10 +1755,13 @@ const _: () = {
     ["Alignment of rte_rwlock_t"][::std::mem::align_of::<rte_rwlock_t>() - 4usize];
     ["Offset of field: rte_rwlock_t::cnt"][::std::mem::offset_of!(rte_rwlock_t, cnt) - 0usize];
 };
-pub const rte_lcore_state_t_WAIT: rte_lcore_state_t = 0;
-pub const rte_lcore_state_t_RUNNING: rte_lcore_state_t = 1;
+#[repr(u32)]
 #[doc = " State of an lcore."]
-pub type rte_lcore_state_t = ::std::os::raw::c_uint;
+#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+pub enum rte_lcore_state_t {
+    WAIT = 0,
+    RUNNING = 1,
+}
 #[doc = " Definition of a remote launch function."]
 pub type lcore_function_t = ::std::option::Option<
     unsafe extern "C" fn(arg1: *mut ::std::os::raw::c_void) -> ::std::os::raw::c_int,

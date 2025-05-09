@@ -13,10 +13,10 @@ bitbag = "0.3.0"
 bstr = "1.12.0"
 bytes = "1.10.1"
 deepeedeekay-sys = { version = "0.1.0", path = "sys" }
-derive_more = { version = "2.0.1", features = ["debug"] }
+derive_more = { version = "2.0.1", features = ["debug", "display", "into"] }
 itertools = "0.14.0"
 num = "0.4.3"
-seasick = "0.4.3"
+seasick = "0.4.4"
 
 [workspace]
 members = ["sys"]
@@ -24,6 +24,8 @@ package.license = "LicenseRef-PrivateUndisclosed"
 package.repository = "https://github.com/aatifsyed/deepeedeekay"
 
 [dev-dependencies]
+anyhow = "1.0.98"
+clap = { version = "4.5.37", features = ["derive"] }
 cstream = "0.1.4"
 fopencookie = "0.1.1"
 libc = "0.2.172"

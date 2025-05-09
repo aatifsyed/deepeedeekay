@@ -10,6 +10,51 @@ use core::{
     str::FromStr,
 };
 
+/// Emulate a `C`-style `for` loop.
+pub fn cfor<T, CondF, NextF>(init: T, cond: CondF, next: NextF) -> CFor<T, CondF, NextF>
+where
+    T: Copy,
+    CondF: FnMut(T) -> bool,
+    NextF: FnMut(T) -> T,
+{
+    CFor {
+        current: init,
+        cond,
+        next,
+    }
+}
+
+/// [`Iterator`] returned by [`cfor`].
+pub struct CFor<T, CondF = fn(T) -> bool, NextF = fn(T) -> T> {
+    current: T,
+    cond: CondF,
+    next: NextF,
+}
+
+impl<T, CondF, NextF> Iterator for CFor<T, CondF, NextF>
+where
+    T: Copy,
+    CondF: FnMut(T) -> bool,
+    NextF: FnMut(T) -> T,
+{
+    type Item = T;
+    fn next(&mut self) -> Option<Self::Item> {
+        let Self {
+            current,
+            cond,
+            next,
+        } = self;
+        match cond(*current) {
+            true => {
+                let yieldme = *current;
+                *current = next(yieldme);
+                Some(yieldme)
+            }
+            false => None,
+        }
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 pub struct PhantomUnsend(PhantomData<*mut c_void>);
 impl PhantomUnsend {
@@ -84,7 +129,8 @@ pub mod neg {
         };
     }
     neg!(
-        EFAULT, ENOENT, ENOBUFS, ENOTSUP, EINVAL, ENOMEM, ENODEV, EIO, EAGAIN, EOVERFLOW
+        EFAULT, ENOENT, ENOBUFS, ENOTSUP, EINVAL, ENOMEM, ENODEV, EIO, EAGAIN, EOVERFLOW, EBUSY,
+        EPIPE
     );
 }
 
@@ -134,6 +180,12 @@ pub struct WithError<T, E> {
     pub error: E,
 }
 
+impl<T, E> WithError<T, E> {
+    pub fn into_error(self) -> E {
+        self.error
+    }
+}
+
 impl<T, E: fmt::Display> fmt::Display for WithError<T, E> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         self.error.fmt(f)
@@ -171,3 +223,14 @@ macro_rules! do_impl {
 do_impl!(
     Binary, Debug, Display, LowerExp, LowerHex, Octal, Pointer, UpperExp, UpperHex
 );
+
+pub mod konst {
+    pub mod convert {
+        pub const fn u32_to_usize(u: u32) -> usize {
+            if cfg!(target_pointer_width = "16") {
+                assert!(u <= u16::MAX as u32);
+            }
+            u as _
+        }
+    }
+}

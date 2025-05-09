@@ -32,11 +32,19 @@ pub struct Pool<'rt, T = ()> {
 }
 
 impl Runtime {
+    pub fn pkt_pool<'rt>(
+        &'rt self,
+        name: &CStr,
+        capacity: c_uint,
+        space: u16,
+    ) -> ffi::Result<Pool<'rt>> {
+        self.pkt_pool_of(name, capacity, space)
+    }
     /// Create a new pool with space for `capacity` [`Segment`]s,
     /// each with `space` bytes of [`space`](Segment::space).
     ///
     /// Metadata `T` is [`Default`]ed in each [`Segment`].
-    pub fn pkt_pool<'rt, T: Default>(
+    pub fn pkt_pool_of<'rt, T: Default>(
         &'rt self,
         name: &CStr,
         capacity: c_uint,
@@ -231,6 +239,9 @@ impl<T> Drop for Pool<'_, T> {
     }
 }
 
+unsafe impl<T: Send> Send for Pool<'_, T> {}
+unsafe impl<T: Sync> Sync for Pool<'_, T> {}
+
 /// An owned, single [`Segment`].
 pub struct FreeSegment<'pool, T = ()>(NonNull<Segment<'pool, T>>);
 
@@ -296,6 +307,9 @@ impl<'pool, T> From<FreeSegment<'pool, T>> for Packet<'pool, T> {
         pkt
     }
 }
+
+unsafe impl<T: Send> Send for FreeSegment<'_, T> {}
+unsafe impl<T: Sync> Sync for FreeSegment<'_, T> {}
 
 /// A non-empty, owned linked list of [`Segment`]s.
 pub struct Packet<'pool, T = ()> {
@@ -402,6 +416,9 @@ impl<'pool, T> Extend<FreeSegment<'pool, T>> for Packet<'pool, T> {
         drop(self.iter_mut());
     }
 }
+
+unsafe impl<T: Send> Send for Packet<'_, T> {}
+unsafe impl<T: Sync> Sync for Packet<'_, T> {}
 
 /// Implementor of [`bytes::Buf`] for a [`Packet`].
 #[derive(Debug)]
@@ -828,7 +845,7 @@ mod tests {
     #[test]
     fn pool_caps() {
         let pool = &crate::rt::test()
-            .pkt_pool::<()>(c"pool_caps", 2, 6)
+            .pkt_pool_of::<()>(c"pool_caps", 2, 6)
             .unwrap();
         assert(pool, 2, 0, 2);
         let s1 = pool.pop_segment().unwrap();
@@ -845,7 +862,9 @@ mod tests {
 
     #[test]
     fn seg_buf() {
-        let pool = &crate::rt::test().pkt_pool::<()>(c"seg_buf", 1, 5).unwrap();
+        let pool = &crate::rt::test()
+            .pkt_pool_of::<()>(c"seg_buf", 1, 5)
+            .unwrap();
         let mut seg = pool.pop_segment().unwrap();
         assert_eq!(seg.data(), []);
         (&mut seg).writer().write_all(b"hello").unwrap();
@@ -856,7 +875,9 @@ mod tests {
 
     #[test]
     fn pkt_buf() {
-        let pool = &crate::rt::test().pkt_pool::<()>(c"pkt_buf", 2, 4).unwrap();
+        let pool = &crate::rt::test()
+            .pkt_pool_of::<()>(c"pkt_buf", 2, 4)
+            .unwrap();
         let mut pkt = pool.get_pkt(6).unwrap();
         assert_eq!(pkt.capacity(), 8);
         assert_eq!(pkt.len(), 0);
@@ -870,7 +891,7 @@ mod tests {
     #[test]
     fn linearize() {
         let pool = &crate::rt::test()
-            .pkt_pool::<()>(c"linearize", 2, 5)
+            .pkt_pool_of::<()>(c"linearize", 2, 5)
             .unwrap();
         let mut seg1 = pool.pop_segment().unwrap();
         seg1.put_slice(b"hel");
