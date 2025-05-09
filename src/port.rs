@@ -105,6 +105,7 @@ pub struct DeviceInfo<'rt> {
 }
 
 #[derive(BitOr, Flags, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[bitbag::check]
 #[repr(u32)]
 pub enum DeviceFlags {
     FlowOpsThreadSafe = sys::RTE_ETH_DEV_FLOW_OPS_THREAD_SAFE,
@@ -117,6 +118,7 @@ pub enum DeviceFlags {
 }
 
 #[derive(BitOr, Flags, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[bitbag::check]
 #[repr(u64)]
 pub enum RxOffloadFlags {
     VlanStrip = sys::RTE_ETH_RX_OFFLOAD_VLAN_STRIP,
@@ -140,6 +142,7 @@ pub enum RxOffloadFlags {
 }
 
 #[derive(BitOr, Flags, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[bitbag::check]
 #[repr(u64)]
 pub enum TxOffloadFlags {
     VlanInsert = sys::RTE_ETH_TX_OFFLOAD_VLAN_INSERT,
@@ -167,6 +170,7 @@ pub enum TxOffloadFlags {
 }
 
 #[derive(BitOr, Flags, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[bitbag::check]
 #[repr(u32)]
 pub enum RssAlgoFlags {
     Default = 1 << sys::rte_eth_hash_function::RTE_ETH_HASH_FUNCTION_DEFAULT as u32,
@@ -180,6 +184,7 @@ pub enum RssAlgoFlags {
 }
 
 #[derive(BitOr, Flags, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[bitbag::check]
 #[repr(u32)]
 pub enum LinkSpeedFlags {
     Fixed = sys::RTE_ETH_LINK_SPEED_FIXED,
@@ -202,6 +207,7 @@ pub enum LinkSpeedFlags {
 }
 
 #[derive(BitOr, Flags, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[bitbag::check]
 #[repr(u64)]
 pub enum DevCapabilityFlags {
     RuntimeRxQueueSetup = sys::RTE_ETH_DEV_CAPA_RUNTIME_RX_QUEUE_SETUP,
@@ -420,12 +426,12 @@ impl<'rt> Naive<'rt> {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct TxConfig {
     pub depth: u16,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct RxConfig<'pool, T> {
     pub depth: u16,
     pub pool: &'pool pkt::Pool<'pool, T>,
